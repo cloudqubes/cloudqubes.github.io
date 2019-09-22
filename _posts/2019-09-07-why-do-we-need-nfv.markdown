@@ -2,7 +2,7 @@
 layout: post
 title:  "Why do we need NFV?"
 date:   2019-09-07 05:35:00 +0530
-categories: nfv transformation
+categories: insights nfv transformation
 ---
 **Telcos make the Intenet a reality, but their future is challenging. A complete revamp is the only way forward, and NFV is here to incite.**
 

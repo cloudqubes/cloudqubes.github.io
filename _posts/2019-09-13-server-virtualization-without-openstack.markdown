@@ -1,15 +1,15 @@
 ---
 layout: post
-title:  "How to create a VM in Ubuntu with KVM"
+title:  "Server Virtualization without OpenStack"
 date:   2019-09-13 05:10:00 +0530
-categories: virtualization kvm hands-on
+categories: handson virtualization kvm
 ---
 
-**OpenStack makes it easy to manage a large number of virtual machines, across multiple physical hosts. But you can create VMs without it. In this hands-on exercise we will create a single VM on a host machine running Ubuntu, without using OpenStack.**
+**OpenStack makes it easy to manage a large number of virtual machines, across multiple physical hosts. But you can create VMs without it. In this hands-on exercise we will create a VM on a server running Ubuntu 16.04, without using OpenStack.**
 
-Essentially OpenStack is a controller which interworks with the hypervisor software running on multiple host computes, and fascilitate the management of virtual machines . The hypervisor is responsible for emulating virtual CPU resources, and allocating memory and disk space for the VM to function. 
+Essentially OpenStack is a controller which interworks with the hypervisor software running on multiple host computes, and fascilitates the management of virtual machines . The hypervisor is responsible for emulating virtual CPU resources, and allocating memory and disk space for the VMs to function. 
 
-OpenStack supports a range of hypervisors including KVM, LXC and Xen. For this exercise we will use KVM on Ubuntu 16.04.  
+OpenStack supports a range of hypervisors including KVM, LXC and Xen. For this exercise we will use KVM.  
 
 ## Step 1: Install KVM 
 
