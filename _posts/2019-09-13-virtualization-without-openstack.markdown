@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Server Virtualization without OpenStack"
+title:  "Virtualization without OpenStack"
 date:   2019-09-13 05:10:00 +0530
-categories: handson virtualization kvm
+categories: hands-on kvm virtualization
 ---
 
 **OpenStack makes it easy to manage a large number of virtual machines, across multiple physical hosts. But you can create VMs without it. In this hands-on exercise we will create a VM on a server running Ubuntu 16.04, without using OpenStack.**
