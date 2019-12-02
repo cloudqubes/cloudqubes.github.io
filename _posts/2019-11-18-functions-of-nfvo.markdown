@@ -9,7 +9,7 @@ categories: insights NFV NFVO
 
 We have introduced NFVO in a [previous post]({% post_url 2019-09-04-introduction-to-nfv %}), where we discussed the ETSI NFV architectural framework. However, you may find that the actual implementation of NFVO in the industry, is slightly different to what is prescribed by ETSI.
 
-<img src="{{ "/assets/images/nfvo.png" | absolute_url }}" alt="drawing" width="1500"/>
+<img src="{{ "/assets/images/nfvo.png" | absolute_url }}" alt="NFVO" width="1500"/>
 
 While NFVO and VNFM are defined as two different entities in ETSI framework, most vendors bundle them together as NFVO. The VNFM that is inside the NFVO is named Generic VNFM or G-VNFM, and you could integrate Specific VNFMs or S-VNFMs via Or-Vnfm interface. 
 
