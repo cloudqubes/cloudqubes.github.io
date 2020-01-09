@@ -18,7 +18,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Telco Cloud
+title: Cloud Qubes
 email: clloud.qubes@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   NFV is making a profound impact on telcommunication networks.
@@ -28,7 +28,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   Even though its challenging the future of cloud telco is exciting.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
-#twitter_username: jekyllrb
+twitter_username: cloudqubes
 github_username:  cloudqubes
 
 # Build settings
