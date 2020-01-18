@@ -1,26 +1,28 @@
 ---
 layout: post
 title:  "Happy Virtualizing with Multipass"
-date:   2020-01-12 14:15:00 +0530
+date:   2020-01-18 05:48:00 +0530
 categories: hands-on linux 
 tags: multipass
 ---
 
-**Did you imagine that setting up VMs in your laptop is this easy?**
+**Did you imagine that setting up VMs in your Ubuntu workstation is this easy?**
 
-Had you ever tried to install KVM on your Ubuntu laptop and launch VMs, you may appreciate the effort required to do so. Here is good news. With Multipass that work is easy and straightforward. Without further adieu let's get started.
+Had you ever tried to setup KVM, and launch VMs using `virt-install` on Ubuntu Desktop? Then, you will definitely appreciate [Multipass] [multipass]. Launching a VM with [Multipass] [multipass] is so easy and straightforward that you will be up and running within minutes.
 
-multipass is a software developed by Canonical, the company behind Ubuntu. However, multipass is not limited to Ubuntu. You can run it on both Windows and Mac as well.
+While being a product of [Canonical] [canonical]; the company behind [Ubuntu] [ubuntu], [Multipass] [multipass] runs not only on Linux but also on Windows and Mac. 
+
+So, let's get started.
 
 # Installation 
 
-I am going to use the latest version of Ubuntu (19.10) as the OS in my laptop. The snap packages make the installation process hassle free and easy.
+[Multipass] [multipass] is available as a snap package. While we used the latest version of [Ubuntu] [ubuntu] (19.10), this will work on most newer versions of Linux.
 
 {% highlight shell %}
 $ snap install multipass --classic
 {% endhighlight %} 
 
-Then, check that you have write access to the multipass socket.
+Then, check that you have write access to the `multipass_socket`.
 
 {% highlight shell %}
 $ ls -l /var/snap/multipass/common/
@@ -32,28 +34,32 @@ srw-rw---- 1 root sudo    0 ජන   15 07:02 multipass_socket
 -rw-r--r-- 1 root root   51 ජන   15 07:02 snap_config
  {% endhighlight %} 
 
-multiplass_socket is a socket file used by multipass. Socket files are a type of file used by Linux systems to facilitate interprocess network communication. You could write to it similar to a TCP/IP port, but since it is a file, you could also apply the write protection capabilities that are available to a file.
+`multiplass_socket` is a socket file used by multipass. Socket files are a type of file used by Linux systems to facilitate interprocess network communication. You could write to it similar to a TCP/IP port, but since it is a file, you could also apply the write protection capabilities that are available to a file.
 
-In this case, we have to ensure that we belong to a group that have write access to this file.
+As per the above, the `sudo` group has write access to `multipass_socket`. Let's check what groups do we belong to:
 
 {% highlight shell %}
 $ groups
 cloudqubes adm cdrom sudo dip plugdev lpadmin lxd sambashare
-{% endhighlight %} 
+{% endhighlight %}
 
-Since we belong to the group sudo, we are good to go.
+If `sudo` group is there in the output, you have write permission to the `multipass_socket`. If not you have to add your user to the `sudo` group:
+
+{% highlight shell %}
+$ usermod -aG sudo <username>
+{% endhighlight %}
 
 # Launch the first VM
 
-Multipass is configured with some defaults, so you can launch a VM simply.
+Multipass is configured with some defaults, so you can get started quite easily.
 
 {% highlight shell %}
 $ multipass launch --name my_first_vm
 {% endhighlight %} 
 
-This will launch a VM using Ubuntu 18.04 LTS os the OS. The VM will be configured with 1 vCPU, 1GB memory and 5GB harddisk. Since this is the first time multipass will download the image, so will take some time to launch the VM. But if you use the same image the second time, it will reuse the image without donwloading.
+This will launch a VM using Ubuntu 18.04 LTS os the OS. The VM will be configured with 1 vCPU, 1GB memory, and 5GB harddisk. Since this is the first time, multipass will download the image, so will take some time to launch the VM. But if you use the same image the second time, [Multipass] [multipass] will reuse the image without donwloading.
 
-Once the VM is ready, you can query its information
+Once the VM is ready, you can query its information.
 
 {% highlight shell %}
 $ multipass list
@@ -72,18 +78,21 @@ Memory usage:   100.8M out of 985.1M
 
 {% endhighlight %} 
 
-A VM can be stopped, to free up its CPU and memory. Then if you want can be started again.
+A VM can be stopped, to free up its CPU and memory. Then, can be started again when youu want.
 
 {% highlight shell %}
 $ multipass stop my_first_vm
 $ multipass list                                  
 Name                    State             IPv4             Image
 my_first_vm             Stopped           --               Ubuntu 18.04 LTS
+
+$ multipass start my_first_vm
 {% endhighlight %} 
 
 # Working on the VM
 
 You can execute any command on a VM.
+
 {% highlight shell %}
 $ multipass exec my_first_vm -- ls -la
 total 32
@@ -97,7 +106,8 @@ drwx------ 3 ubuntu ubuntu 4096 Jan 17 06:19 .gnupg
 drwx------ 2 ubuntu ubuntu 4096 Jan 17 06:18 .ssh
 {% endhighlight %}
 
-You can also directly access the shell
+You can also directly access the shell.
+
 {% highlight shell %}
 $ multipass shell my_first_vm
 {% endhighlight %}
@@ -105,7 +115,7 @@ $ multipass shell my_first_vm
 
 # Delete VM
 
-When no longer needed the VM can be deleted. But deleting will not remove its disk image and you can always recover it back.
+When no longer needed the VM can be deleted. But deleting will not remove its disk image, so you can always recover it.
 
 {% highlight shell %}
 $ multipass delete my_first_vm
@@ -118,16 +128,18 @@ Name                    State             IPv4             Image
 my_first_vm             Stopped           --               Ubuntu 18.04 LTS
 {% endhighlight %}
 
-If you need to permanently delete a VM and remove the data, you have to delete and purge. But this will purge all deleted images, since purge does not accept any other parameters.
+If you need to permanently delete a VM and remove the data, you have to delete and purge. But this will purge all deleted images, since `purge` does not accept any other parameters.
+
 {% highlight shell %}
 $ multipass purge
 {% endhighlight %}
 
 # Launch VM with a specific OS version
 
-Now, let's launch a VM running Ubuntu 19.04. You can get a list of available images and use one one of those to launch a VM.
+You can get a list of available images, and use one one of those to launch a VM. Let's launch a VM running Ubuntu 19.04.
+
 {% highlight shell %}
- multipass find
+$ multipass find
 Image                   Aliases           Version          Description
 snapcraft:core          core16            20200115         Snapcraft builder for Core 16
 snapcraft:core18                          20200115         Snapcraft builder for Core 18
@@ -143,14 +155,15 @@ $ multipass launch --name cloudqubes 19.10
 
 # Customize VM capacity
 
-We will launch a VM with 2 vCPUs and 4G memory
+Launch a VM with 2 vCPUs and 4G memory:
+
 {% highlight shell %}
 $ multipass launch --cpus 2 --mem 4G --name devstack 18.04
 {% endhighlight %}
 
 # Sharing files between host and guest
 
-We can easily share files between the host and VM with multipass. We will mount a local directory `/home/cloudqubes/data` of our host machine, at `/home/ubuntu/devstack_data` in our newly created devstack VM.
+You can easily share files between the host and VM with [Multipass] [multipass]. Just mount any local directory in the host machine at a directory in VM with `mount`. Let's mount the local directory `/home/cloudqubes/data` in our host machine, at `/home/ubuntu/devstack_data` in the newly created devstack VM.
 
 {% highlight shell %}
 multipass mount /home/cloudqubes/data devstack:/home/ubuntu/devstack_data
@@ -162,3 +175,15 @@ Unmounting is also easy.
 $ multipass unmount cloudqubes
 {% endhighlight %}
 
+# Getting help
+
+`multipass -h` will list the available commands with a brief explanation. If you need more information on specific command, `multipass <command_name> -h` will give information on parameter usage of that specific command.
+
+## References
+
+1. [Multipass Documentation] [multipass_docs]
+
+[multipass]: https://multipass.run/
+[ubuntu]: https://ubuntu.com/
+[canonical]: https://canonical.com/
+[multipass_docs]: https://multipass.run/docs
