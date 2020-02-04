@@ -2,8 +2,8 @@
 layout: post
 title:  "Happy Virtualizing with Multipass"
 date:   2020-01-18 05:48:00 +0530
-categories: hands-on linux 
-tags: multipass
+categories: [hands-on, linux]
+tags: [multipass, VM]
 ---
 
 **Did you imagine that setting up VMs in your Ubuntu workstation is this easy?**

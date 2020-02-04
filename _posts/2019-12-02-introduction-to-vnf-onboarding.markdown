@@ -2,7 +2,8 @@
 layout: post
 title:  "Introduction to VNF Onboarding"
 date:   2019-12-02 19:15:00 +0530
-categories: insights NFV VNF onboarding
+categories: insights nfv
+tags: NFV VNF onboarding
 ---
 
 **If you are just starting your NFV journey, VNF onboarding may feel like an overwhelming task. Adapting a structured approach can definitely save you from a lot of frustrations.**

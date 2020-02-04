@@ -87,7 +87,7 @@ The web server information are in `sites-available` directory. Let's create a ne
 
 The proxy configurations in NGINX reside under `server` directive. Accordingly we have to add separate directives for each of the OpenStack services and NFVO.
 
-This is the configuration for proxying the requests of `kestone` service.
+This is the configuration for proxying the requests of `kesytone` service.
 
 {% highlight shell %}
 #keystone
