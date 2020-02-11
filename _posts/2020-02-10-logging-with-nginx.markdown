@@ -8,11 +8,11 @@ tags: [NGINX reverse-proxy openstack logging]
 
 **Placing a reverse proxy in front of OpenStack is a sensible choice. Let's see why?**
 
-In a previous post we setup a reverse proxy with NGINX, for talking to OpenStack API endpoints from our S-VNFMs. If we are to get our hands dirty in any type of API integration, especially with OpenStack,  troubleshooting is inevitable. 
+In a previous [post] we setup a reverse proxy with [NGINX], for talking to [OpenStack API] endpoints from our S-VNFMs. If we are to get our hands dirty in any type of API integration, especially with [OpenStack], troubleshooting is inevitable. 
 
-Although OpenStack implement comprehensive logging features, those logs are usually distributed across different locations in OpenStack controller nodes, so our reverse proxy would serve as the ideal central location for collecting all API logs.
+Although [OpenStack] implement comprehensive logging features, those logs are usually distributed across different locations in OpenStack controller nodes, so our reverse proxy would serve as the ideal central location for collecting all API logs.
 
-NGINX is equipped with a dedicated module, [ngx_http_log_module] for logging HTTP requests. With just two directives in NGINX config, we can start logging all our API requests.
+[NGINX] is equipped with a dedicated module, [ngx_http_log_module] for logging HTTP requests. With just two directives in NGINX config, we can start logging all our API requests.
 
 ## log_format
 The `log_format` directive defines the format of the log file. It takes the form 'log_format <format_name> format_string;`. Here's a sample configuration, which we include within the `http` context in the main configuration file `nginx.conf'
@@ -75,10 +75,12 @@ $ cat /var/log/nginx/access_myapp.log
 05/Feb/2020:13:54:49 +0000, 127.0.0.1, 5001, POST /long_request HTTP/1.1, status: 200, req_body: ""param1": "value"
 {% endhighlight %} 
 
-In this post we configured logging function in NGINX server. Although we used a dummy Python app to test our configurations, you could easily apply the concepts to enable logging for your OpenStack configurations.
-
-We this information would make life easier in your NFV journey.
+In this post we tested the logging function in [NGINX] server, with a dummy Pyhon app. The same concepts can be applied to enable logging for [OpenStack reverse proxy] [post], which we hope, will make life easier for you in the NFV journey.
 
 [ngx_http_log_module]:  http://nginx.org/en/docs/http/ngx_http_log_module.html
 [log_format]: http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
 [variable_index]: http://nginx.org/en/docs/varindex.html
+[OpenStack API]: https://docs.openstack.org/api-quick-start/
+[NGINX]: https://www.nginx.com/
+[OpenStack]: https://openstack.org/
+[post]: {{site.baseurl}}{% post_url 2020-01-30-setting-up-an-nginx-reverse-proxy-for-openstack%}
