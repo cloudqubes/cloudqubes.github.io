@@ -5,13 +5,13 @@ date:   2019-09-22 04:00:00 +0530
 categories: hands-on openstack heat
 ---
 
-**Heat is the orchestration engine, and is one of the main projects in OpenStack. It manages OpenStack resources via human and machine readable template files, called HOT.** 
+**[Heat] is the orchestration engine, and is one of the main projects in OpenStack. It manages OpenStack resources via human and machine readable template files, called HOT.** 
 
 A HOT file allows you to define OpenStack infrastructure resources such as servers, network ports, security groups etc., and their runtime parameters. Once a HOT file is created, it can be used via Horizon GUI or OpenStack CLI to create a stack. The creation of a stack will instantiate all the resources such as VMs defined in the HOT file, and the deletion of the stack will delete all the associated resources. 
 
-Heat is also capable of updating a stack so that it is possible to add more VMs to an already defined stack, without interrupting the running VMs. 
+[Heat] is also capable of updating a stack so that it is possible to add more VMs to an already defined stack, without interrupting the running VMs. 
 
-Heat has various advanced features such as ResourceGroup that make it easy to manage a large number of resources. While it would not be possible to cover all of these in a single post, we hope to explore them in future. 
+[Heat] has various advanced features such as ResourceGroup that make it easy to manage a large number of resources. While it would not be possible to cover all of these in a single post, we hope to explore them in future. 
 
 Now let's write a simple HOT file for defining a single VM. For the OS of our VM we'll use CirrOS which comes with OpenStack by default.  
 
@@ -50,6 +50,7 @@ resources:
             network: { get_param: network_name } 
             fixed_ips: 
                 - subnet: { get_param: subnet_name} 
+    #instantiate VM
     vm_1: 
         type: OS::Nova::Server 
         properties: 
@@ -58,7 +59,7 @@ resources:
             flavor: { get_param: flavor_name } 
             networks: 
                 - port: { get_resource: network_port } 
-{% endhighlight %} 
+{% endhighlight %}
 
 # Understanding the HOT file 
 
@@ -79,6 +80,10 @@ Defines a set of parameters that can be used multiple times over the template. W
 ## resources 
 
 This is a mandatory section, and contain the actual resource definitions. Here we are creating a VM and attaching a network port to it. Although we can create the network in the HOT file, in this case the network is precreated for simplicity. 
+
+## comments
+
+Text followed by `#` are considered as comments in a [Heat] template. While not mandatory, it would be a good practice to include comments for clarity.
 
 With our HOT file let's create the stack. 
 
@@ -129,3 +134,4 @@ $ openstack stack delete simple_stack
 *[VM]: Virtual Machine 
 
 [openstack]: https://www.openstack.org/ 
+[Heat]: https://docs.openstack.org/heat/latest/

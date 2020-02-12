@@ -59,7 +59,7 @@ $ cat /var/log/nginx/access_myapp.log
 05/Feb/2020:13:46:27 +0000, 127.0.0.1, 5001, POST /long_request HTTP/1.1, status: 200, req_body: \x22\x22param1\x22: \x22value\x22
 {% endhighlight %} 
 
-You may notice that that `x22` (unicode value) is used to escape the quotation mark. For OpenStack APIs with a lot of parameters in `json` format this would make our log file unreadable.
+You may notice that that `x22` (unicode value) is used to escape the quotation mark in `json`. For OpenStack APIs with a lot of parameters in `json` format, this will make the log files look cluttered.
 
 So, we will update the `log_format` as below.
 
@@ -67,15 +67,15 @@ So, we will update the `log_format` as below.
 log_format detailed_log escape=none '$time_local, $remote_addr, $server_port, $request, status: $status, req_body: $request_body';
 {% endhighlight %} 
 
-Check the log file again.
+Make a new HTTP request with `curl`, and check the log file. The `json` parameters will be written to the log with the quotation marks, making it more readable.
 
 {% highlight shell %}
 $ cat /var/log/nginx/access_myapp.log
 05/Feb/2020:13:46:27 +0000, 127.0.0.1, 5001, POST /long_request HTTP/1.1, status: 200, req_body: \x22\x22param1\x22: \x22value\x22
-05/Feb/2020:13:54:49 +0000, 127.0.0.1, 5001, POST /long_request HTTP/1.1, status: 200, req_body: ""param1": "value"
+05/Feb/2020:13:54:49 +0000, 127.0.0.1, 5001, POST /long_request HTTP/1.1, status: 200, req_body: ""param1": "value""
 {% endhighlight %} 
 
-In this post we tested the logging function in [NGINX] server, with a dummy Pyhon app. The same concepts can be applied to enable logging for [OpenStack reverse proxy] [post], which we hope, will make life easier for you in the NFV journey.
+In this post we tested the logging function in [NGINX] server, with a dummy Python app. The same concepts can be applied to enable logging for [OpenStack reverse proxy] [post], which we hope, will make life easier for you in the NFV journey.
 
 [ngx_http_log_module]:  http://nginx.org/en/docs/http/ngx_http_log_module.html
 [log_format]: http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
