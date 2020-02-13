@@ -135,13 +135,18 @@ The protocols and ports not specified by security rules will be denied, so both 
 
 Our HOT package creates only one VM. We are using the `get_resource` to refer to the flavor and virtual ports. The `get_param` is used to refer to values defined in `parameters` section.
 
-Most of the cloud images provided by major linux distributioins such as [Centos] and [Ubuntu], do not allow password based authentication by default. We are using `user_data` to set the password of the default user, and enable password authentication for SSH. Alternatively you can use key based authentication by creaitng a key pair.
+Most of the cloud images provided by major linux distributioins such as [Centos] and [Ubuntu], do not allow password based authentication by default. We are using `user_data` to set the password of the default user, and enable password authentication for SSH. Alternatively we can use key based authentication by creaitng a key pair.
 
-You could use the same method we described in previous [post] to create a Heat stack with this template. When we delete this stack, all the resources including security groups, and flavor created by the stack would be deleted. 
+We can deploy the Heat stack using the methods described in previous [post]. 
+
+Although we can use [OpenStack CLI] to create security groups and flavor, we have decided to create them via the HOT file itself. An advantage of this approach is that when the Heat stack is deleted, all the associated resources will also be deleted, so less manual cleansing is required.
+
+The complete HOT file can be found [here][app_server]. In future posts we will expore more about [Heat].
+
 
 *[HOT]: Heat Orchestration Template
 
-[post]: {{site.baseurl}}{% post_url 2019-09-22-getting-started-with-heat%}
+[post]: {{site.baseurl}}{% post_url 2019-09-22-getting-started-with-heat %}
 [heat_template_version]: {{site.baseurl}}{% post_url 2019-09-22-getting-started-with-heat%}
 [description]: {{site.baseurl}}{% post_url 2019-09-22-getting-started-with-heat%}
 [parameters]: {{site.baseurl}}{% post_url 2019-09-22-getting-started-with-heat%}
@@ -151,3 +156,4 @@ You could use the same method we described in previous [post] to create a Heat s
 [app_server]: https://gist.github.com/cloudqubes/059a7fd93546a437fd7784839000cec0
 [Ubuntu]: https://cloud-images.ubuntu.com/
 [Centos]: https://cloud.centos.org/centos/7/images/
+[OpenStack CLI]: {{site.baseurl}}{% post_url 2019-12-18-how-to-use-openstack-cli %}
