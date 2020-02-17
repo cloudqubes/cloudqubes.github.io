@@ -12,7 +12,7 @@ There are several different mechanisms of onboarding VNFs. Heat template based V
 
 This VNF onboarding process has four main phases.
 
-<img src="{{ "/assets/images/vnf_onboarding_process.png" | absolute_url }}" alt="VNF Onboarding Process" width="1500"/>
+![VNF Onboarding Process](/assets/images/vnf_onboarding_process.png)
 
 # Requirement Gathering
 
