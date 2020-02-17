@@ -13,7 +13,7 @@ Due to their nature of intensive reliability and real-time performance requireme
 # So what really is NFV?
  It is about virtualizing these conventional PNFs and migrating them to data centers equipped with commodity computing hardware. 
 
-<img src="{{ "/assets/images/virtualizing_pnfs.png" | absolute_url }}" alt="drawing" width="1000"/>
+![Virtualizing PNFs](/assets/images/virtualizing_pnfs.png)
 
 Virtualization is nothing new to the IT industry which has been using it in various forms since 1960s. Today considerable amount of IT workloads are running on both public and private virtualized infrastructure. However telecom applications have some inherent feature differences from their IT counterparts that makes it particularly challenging to run them on virtualized infrastructure. Higher demand on network bandwidth, lower latency requirements, fault tolerance and resiliency are some of them.
 
@@ -26,7 +26,7 @@ These new players were mostly software centric with their core product being dev
 
 Motivated by these industry requirements the ETSI NFV ISG defined a conceptual architecture for realizing NFV.
 
-![NFV Architecture]({{ "/assets/images/nfv_architecture.png" | absolute_url }})
+![NFV Architecture](/assets/images/nfv_architecture.png)
 
 The ETSI architecture consists of:
 
