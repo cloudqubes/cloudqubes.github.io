@@ -12,5 +12,5 @@ While [NFV] is an attractive technology development, reaping its real benefits i
 
 [jekyll-organization]: https://github.com/jekyll
 [cloudqubes]: http://www.cloudqubes.com/
-*[COTS]: Common off-the-shelf
-*[NFV]: Network Function Virtualization
+[COTS]: Common off-the-shelf
+[NFV]: Network Function Virtualization

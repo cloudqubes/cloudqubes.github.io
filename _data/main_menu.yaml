@@ -1,0 +1,10 @@
+docs_list_title: Main Menu
+docs:
+  - title: Blog
+    url: /
+
+  - title: QubeFix
+    url: /qubefixes
+
+  - title: About
+    url: /about
