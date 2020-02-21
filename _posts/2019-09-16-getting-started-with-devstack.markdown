@@ -27,8 +27,17 @@ $ sudo su - stack
 {% endhighlight %} 
  
 ## Step 2: Download DevStack 
+
+Download the latest version from the master branch.
 {% highlight shell %} 
 $ git clone https://opendev.org/openstack/devstack 
+$ cd devstack 
+{% endhighlight %} 
+
+If you want to install a stable version of DevStack, `-b` option can be used clone a specific version in [DevStack repository][devstack_repo]. Below will download the Pike version of DevStack, instead of the latest version.
+
+{% highlight shell %} 
+$ git clone https://opendev.org/openstack/devstack -b stable/pike
 $ cd devstack 
 {% endhighlight %} 
 
@@ -86,3 +95,4 @@ $ openstack service list
 
 [devstack]: https://docs.openstack.org/devstack/latest/ 
 [virtualization_w]: {{site.baseurl}}{% post_url  2019-09-13-virtualization-without-openstack%}
+[devstack_repo]: https://opendev.org/openstack/devstack
