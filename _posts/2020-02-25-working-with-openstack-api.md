@@ -16,7 +16,7 @@ So, let's explore the OpenStack API, using [curl] which is a useful tool for int
 
 Before proceeding further, we have to be familiar with OpenStack service endpoints.
 
-# Endpoint
+# Endpoints
 
 The URL of a webservice, is called its endpoint. The endpoints of OpenStack services can be listed in [CLI]. 
 
@@ -86,26 +86,29 @@ This is the [authentication with scoped authorization][scoped], which means that
 
 If authentication is successful Keystone responds with a token in header parameter `X-Subject-Token`. This token has to be provided in 'X-Auth-Token' header parameter of subsequent API requests.
 
-Since the authentication token is very long and incovenient to copy/paste around, let's set an environment variable, and refer that variable in following requests.
+Since the authentication token is very long and incovenient to copy/paste around, let's save the value to an environment variable, and refer that in following requests.
 
 {% highlight shell %}
 export OS_TOKEN="<authentication token>"
 {% endhighlight %} 
 
 
-## Service catalog
-The response body for the [scoped authorization][scoped] also includes a service catalog, which is the list of authorized URLs for the particular user. 
+## Service Discovery
+
+Service discovery feature ease the work of maintaining the endpoint information at the client application, by providing a service catalog at the time of authentication. The service catalog is an array of endpoints, which are authorized for a particular client.
+
+A service catalog will be always provided in the response of [authentication with scoped authorization][scoped]. It is recommended for the client applications to use this catalog instead of hardcoding the URLs.of individual services.
 
 # Nova
 
-[Nova API] can be used to execute all activities related to VMs. 
+All VM related actions can be accomplished via [Nova API]. 
 
-List VMs:
+List VMs.
 {% highlight shell %}
 curl -i -X GET http://10.10.10.5/compute/v2.1/servers -H "Accept:application/json" -H "Content-Type:application/json" -H "X-Auth-Token: $OS_TOKEN"
 {% endhighlight %} 
 
-Create VM:
+Create VM.
 {% highlight shell %}
 curl -i -X POST http://10.10.10.5/compute/v2.1/servers -H "Accept:application/json" -H "Content-Type:application/json" -H "X-Auth-Token: $OS_TOKEN" -d '
 {
@@ -124,11 +127,16 @@ curl -i -X POST http://10.10.10.5/compute/v2.1/servers -H "Accept:application/js
 
 # Neutron
 
-Neutron API provides options for managing networks.
+[Neutron API] implements all feature for managing virtual networks and ports.
 
-List networks
+List all networks.
 {% highlight shell %}
 curl -i -X GET http://10.10.10.5:9696/v2.0/networks -H "Accept:application/json" -H "Content-Type:application/json" -H "X-Auth-Token: $OS_TOKEN"
+{% endhighlight %} 
+
+We can also use filters to limit the results.
+{% highlight shell %}
+curl -i -X GET http://10.199.254.221:9696/v2.0/networks?name=private -H "Accept:application/json" -H "Content-Type:application/json" -H "X-Auth-Token: $OS_TOKEN" 
 {% endhighlight %} 
 
 Create network:
@@ -143,6 +151,9 @@ curl -i -X POST http://10.10.10.5:9696/v2.0/networks -H "Accept:application/json
 }'
 {% endhighlight %} 
 
+While we have demonstrated only a limited number of operations and features in OpenStack APIs, you could check the [documentation][api_spec] for the complete reference. Once you grab the basic concepts, working with the API of any service should be fairly easy since they all follow a similar pattern.
+
+In a future post we hope to explore more about other authentication options available in [Keystone].
 
 *[S-VNFM]: Specific VNFM
 *[VNF]: Virtual Network Function
@@ -154,3 +165,4 @@ curl -i -X POST http://10.10.10.5:9696/v2.0/networks -H "Accept:application/json
 [keystone_v2]: https://docs.openstack.org/keystone/pike/contributor/http-api.html
 [v3 version]: https://docs.openstack.org/api-ref/identity/v3/
 [scoped]: https://docs.openstack.org/api-ref/identity/v3/#password-authentication-with-scoped-authorization
+[Neutron API]: https://docs.openstack.org/api-ref/network/v2/
