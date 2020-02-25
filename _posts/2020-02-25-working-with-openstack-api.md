@@ -1,16 +1,16 @@
 ---
 layout: post
 title:  "Working with OpenStack API"
-date:   2020-02-26 19:00:00 +0530
+date:   2020-02-25 04:00:00 +0530
 categories: [hands-on, openstack]
 tags: [linux, openstack, API, curl]
 ---
 
 **OpenStack API could be a bit daunting at the beginning. So, let's deal with that.**
 
-All OpenStack services expose their capabilities via RESTful APIs. The OpenStack CLI and Horizon GUI are also client applications that rely on these OpenStack APIs.
+All OpenStack services expose their capabilities via RESTful APIs, that can be consumed by client applications. In fact, the OpenStack CLI and Horizon GUI are also client applications that rely on these APIs.
 
-Integration with OpenStack API is an important part of onboarding a VNF, which is accompanied by a S-VNFM, so that awareness of this API could ensure a smooth onboarding process.
+Integration with OpenStack API is an important part of onboarding a VNF, which is accompanied by an S-VNFM, so that awareness of this API could ensure a smooth onboarding process.
 
 So, let's explore the OpenStack API, using [curl] which is a useful tool for interacting with HTTP APIs. While `curl` has a multitude of options, we will be using only two of them during this exercise; the `-i` option to print the response headers to the output, and `-X` to specify the HTTP command such as `GET` or `POST`.
 
@@ -40,12 +40,14 @@ $ openstack endpoint list
 
 Above is the endpoints listing in a DevStack installation, and could be different from that of a production deployment where each endpoint will have a dedicated port.
 
-The endpoint is the root URL of the service, and the complete URL for sending API requests could be formed by concatenating it with the path in [API specs][api_spec].
+The endpoint is the root URL of the service, and the URL for sending each API request could be formed by concatenating it with the relative path mentioned in [API specs][api_spec].
 
 
 # Keystone
 
-[Keystone], which impelements the authentication and service discvery, should be the first point of contact when working with OpenStack API. Keystone has two API versions; v2 and v3. It is recommended to use v3 version for all new deployments, since v2 would be [deprecated and may be dropped eventually][keystone_v2].
+[Keystone], which impelements the authentication and service discvery, should be the first point of contact when working with OpenStack API. Keystone has two API versions; v2 and v3. It is recommended to use [v3 version] for all new deployments, since v2 would be [deprecated and may be dropped eventually][keystone_v2].
+
+## Authentication
 
 Keystone supports multiple authentication mechanisms such as username/password, LDAP, and OAuth. Saving other authentication methods to a later discussion, let's stick to username/password authentication.
 
@@ -80,11 +82,11 @@ curl -i -X POST http://10.10.10.5/identity/v3/auth/tokens -H "Accept:application
 '
 {% endhighlight %} 
 
-This is the authentication with scoped authorization, which means that authorizatoin is scoped to the project named `demo`.
+This is the [authentication with scoped authorization][scoped], which means that authorizatoin is scoped to the project named `demo`.
 
-Upon successfull authentication Keystone responds with a token in header parameter `X-Subject-Token`. This token has to be provided in 'X-Auth-Token' header parameter of subsequent API requests.
+If authentication is successful Keystone responds with a token in header parameter `X-Subject-Token`. This token has to be provided in 'X-Auth-Token' header parameter of subsequent API requests.
 
-Since the authentication token is very long and incovenient to copy/paste around, let's set an environment variable, and refer that variable in next request.
+Since the authentication token is very long and incovenient to copy/paste around, let's set an environment variable, and refer that variable in following requests.
 
 {% highlight shell %}
 export OS_TOKEN="<authentication token>"
@@ -92,9 +94,7 @@ export OS_TOKEN="<authentication token>"
 
 
 ## Service catalog
-The response for the above request, includes a 
-The above respone also contains a list of endpoints in the response body. This is the service catalog for the user, which contains the URLs of services the user is authorized to call.
-
+The response body for the [scoped authorization][scoped] also includes a service catalog, which is the list of authorized URLs for the particular user. 
 
 # Nova
 
@@ -152,3 +152,5 @@ curl -i -X POST http://10.10.10.5:9696/v2.0/networks -H "Accept:application/json
 [api_spec]: https://docs.openstack.org/api-quick-start/
 [Nova API]: https://docs.openstack.org/api-ref/compute/
 [keystone_v2]: https://docs.openstack.org/keystone/pike/contributor/http-api.html
+[v3 version]: https://docs.openstack.org/api-ref/identity/v3/
+[scoped]: https://docs.openstack.org/api-ref/identity/v3/#password-authentication-with-scoped-authorization
