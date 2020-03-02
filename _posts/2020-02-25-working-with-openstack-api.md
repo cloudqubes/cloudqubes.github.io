@@ -1,5 +1,6 @@
 ---
 layout: post
+comments: true
 title:  "Working with OpenStack API"
 date:   2020-02-25 04:00:00 +0530
 categories: [hands-on, openstack]
