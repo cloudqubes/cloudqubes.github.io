@@ -11,7 +11,7 @@ tags: [public-cloud, hybrid-cloud, nfv]
 
 Despite the market hype, NFV is not an easy technology to get started on. It requires millions of dollars in cash, as well as comparable amounts of time and effort which again boils down to money. So, is NFV really worth the investment? 
 
-Since cloudification cannot be avoided, and implementing the on premise NFV seems like an overwhelmingly complex project, the Telcos may believe that the public cloud is a better option. It is easy to get started with, available on demand, and seems cheap.  
+Since cloudification cannot be avoided, and implementing the on premise NFV seems like an overwhelmingly complex project, the telcos may believe that the public cloud is a better option. It is easy to get started with, available on demand, and seems cheap.  
 
 But, that thinking could be deceptive. Let's see why? 
 
@@ -25,15 +25,15 @@ Many commercial VNFs are still not fully tested on public cloud, so the impact o
 
 ## Latency 
 
-Since the connectivity to public cloud would be via Internet, a higher latency of several magnitudes, should be expected. While this could impact only certain use cases, they are definitely not going to be edge cases for a Telco. 
+Since the connectivity to public cloud would be via Internet, a higher latency of several magnitudes, should be expected. While this could impact only certain use cases, they are definitely not going to be edge cases for a telco. 
 
 ## Security 
 
-The public cloud is usually connected via networks belonging to 3rd parties. Also the host infrastructure in public cloud is not open for security hardening for the clients. These could hamper some stringent security practices for Telcos. 
+The public cloud is usually connected via networks belonging to 3rd parties. Also the host infrastructure in public cloud is not open for security hardening for the clients. These could hamper some stringent security practices for telcos. 
 
 ## Regulatory policies 
 
-Regulatory policies could restrict Telcos from storing certain types of data such as CDRs, location information of subscribers, etc., outside the territory of their home countries, or even outside own premises. 
+Regulatory policies could restrict telcos from storing certain types of data such as CDRs, location information of subscribers, etc., outside the territory of their home countries, or even outside own premises. 
 
 Even though some of these restrictions could be unacceptable, not all telcos will be able to negotiate with their regulatory bodies and get those restrictions relieved. 
 
