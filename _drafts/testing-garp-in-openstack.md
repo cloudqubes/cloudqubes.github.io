@@ -20,10 +20,78 @@ VM-A and VM-S uses Ubuntu 18.04 OS and we have installed [arping], which is a to
 
 <picture>
 
-Here is the HOT file for our VNF.
+Here is the HOT file for our VNF. For simplicity, we have pre created the networks, security groups, and VM flavor.
 
 {% highlight yaml %}
+heat_template_version: 2014-10-16
 
+description: G-ARP test setup
+
+parameters:
+  vm_image:
+    type: string
+    default: "ubuntu_garp_test"
+  vm_flavor_name:
+    type: string
+    default: "arp_test_vm"
+  test_network:
+    type: string
+    default: "v_net_1"
+  security_group:
+    type: string
+    default: "allow_all"
+resources:
+#network ports
+  vm1_test_port:
+    type: OS::Neutron::Port
+    properties:
+      name: vm1_test_port
+      network: { get_param: test_network } 
+      fixed_ips:
+        - ip_address: "10.10.10.3"
+      security_groups:
+        - { get_param: security_group}
+  vm2_test_port:
+    type: OS::Neutron::Port
+    properties:
+      name: vm2_test_port
+      network: { get_param: test_network }
+      fixed_ips:
+        - ip_address: "10.10.10.4" 
+      security_groups:
+        - { get_param: security_group}
+      allowed_address_pairs: [{"ip_address": "10.10.10.3"}]
+#virtual machines      
+  vm1:
+    type: OS::Nova::Server
+    properties:
+      config_drive: "true"
+      name: "vm1"
+      flavor: { get_param: vm_flavor }
+      image: { get_param: vm_image }
+      networks:
+      - port: { get_resource: vm1_test_port }
+      user_data_format: RAW
+      user_data: |
+        #cloud-config
+        password: garptest
+        chpasswd: { expire: False }
+        ssh_pwauth: True
+  vm2:
+    type: OS::Nova::Server
+    properties:
+      config_drive: "true"
+      name: "vm2"
+      flavor: { get_param: vm_flavor }
+      image: { get_param: vm_image }
+      networks:
+      - port: { get_resource: vm2_test_port }
+      user_data_format: RAW
+      user_data: |
+        #cloud-config
+        password: garptest
+        chpasswd: { expire: False }
+        ssh_pwauth: True
 {% endhighlight %}
 
 
