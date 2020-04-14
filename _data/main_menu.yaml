@@ -3,6 +3,9 @@ docs:
   - title: Blog
     url: /
 
+  - title: Bash
+    url: /bash
+
   - title: QubeFix
     url: /qubefixes
 

@@ -3,7 +3,8 @@ layout: post
 title:  "Install DevStack via a Proxy"
 date:   2020-02-20 06:20:00 +0530
 categories: [qubefix]
-tags: [devstack, proxy, linux, openstack]
+tags: [devstack, proxy, linux, openstack, sub]
+my_categories: [sub]
 ---
 
 We have installed [DevStack on a VM]({% post_url 2019-09-16-getting-started-with-devstack %}), assuming that the VM has direct Internet connectivity. But, most of the time, Internet would be available only via a proxy. 

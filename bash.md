@@ -1,19 +1,13 @@
 ---
-layout: default
+layout: page
+title: Bash Scripts
+permalink: /bash/
 ---
-
 <div class="home">
-  {%- if page.title -%}
-    <h1 class="page-heading">{{ page.title }}</h1>
-  {%- endif -%}
-
-  {{ content }}
-
   {%- if site.posts.size > 0 -%}
-    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
     <ul class="post-list">
       {%- for post in site.posts -%}
-        {%- unless post.my_categories contains "sub" -%}
+        {%- if post.categories contains "bash" -%}
           <li>
             {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
             <span class="post-meta">{{ post.date | date: date_format }}</span>
@@ -26,7 +20,7 @@ layout: default
               {{ post.excerpt }}
             {%- endif -%}
           </li>
-        {%- endunless -%}
+        {%- endif -%}
       {%- endfor -%}
     </ul>
 

@@ -3,7 +3,8 @@ layout: post
 title:  "Install DevStack on an uncertified Linux distribution"
 date:   2020-02-21 18:00:00 +0530
 categories: [qubefix]
-tags: [devstack, openstack]
+tags: [devstack, openstack, sub]
+my_categories: [sub]
 ---
 
 ## Problem Description
