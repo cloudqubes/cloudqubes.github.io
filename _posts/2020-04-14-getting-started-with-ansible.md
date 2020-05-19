@@ -183,15 +183,15 @@ Using the Ansible module `file`, we will create two simlinks in the `/etc/nginx/
       state: link
 {% endhighlight %} 
 
-## Restart NGINX
+## Reload NGINX config
 
-Next, we restart NGINX with Ansible module `service`. 
+Next, we reload NGINX config, with Ansible module `service`. 
 
 {% highlight yaml %}
-  - name: restart nginx
+  - name: reload config file in nginx
     service:
       name: nginx
-      state: restarted
+      state: reloaded
 {% endhighlight %} 
 
 ## Superuser priviledges

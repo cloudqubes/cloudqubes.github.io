@@ -56,7 +56,7 @@ For each OpenStack service we add a `server` contex within `http` context. Here 
         ';
         location / {
             proxy_pass https://openstack.dc1.telco.xy:35357;
-            proxy_ssl_trusted_certificate /home/ubuntu/ssl_key/cee/openstack.crt;
+            proxy_ssl_trusted_certificate /home/ubuntu/ssl_key/openstack.crt;
         }
     }
 {% endhighlight %} 
