@@ -84,7 +84,7 @@ Alternatively, you could build an NFV platform by installing an OpenStack distri
 
 While this option has commercial advantage, it may be more technically challenging than getting the complete solution from a single vendor. However, you get the opportunity of building an NFV platform without any vendor lock-in.
 
-NFV is a transfromation that is challenging both in technical and commercial aspects. We hope that the information shared here, will help you kick-start your NFV journey. 
+NFV is a transfromation that is challenging both in technical and commercial aspects. We hope that the information shared here, will help you kick-start your NFV journey, successfully. 
 
 Good luck...
 
