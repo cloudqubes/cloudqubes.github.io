@@ -80,3 +80,9 @@ ubuntu@test-vm1:~$
 
 10.174.130.0/29
 
+
+Neutron DHCP agents in network.
+# neutron dhcp-agent-list-hosting-net dhcp_test_2
+
+
+
