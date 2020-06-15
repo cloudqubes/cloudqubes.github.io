@@ -154,7 +154,7 @@ Unlike `docker run`, the `start` command does not attach the shell session to th
 $ sudo docker stop docker-nginx
 {% endhighlight %}
 
-This completes our hands on exercise with containers, where we installed [Docker] and manually setup a single container. However, a containerized application in a production environment requires setting up thousands of containers across hundreds of host machines. In the next post we will explore on [Kubernetes], which is a system for managing containerised applications at that scale.
+This completes our hands on exercise with containers, where we installed [Docker] and manually setup a single container. However, a containerized application in a production environment requires setting up thousands of containers across hundreds of host machines. In the [next post] we will explore on [Kubernetes], which is a system for managing containerised applications at that scale.
 
 *[CNF]: Cloud-native Network Function
 *[VNF]: Virtualized Network Function
@@ -166,3 +166,4 @@ This completes our hands on exercise with containers, where we installed [Docker
 [NGINX]: https://hub.docker.com/_/nginx
 [Containered]: https://containerd.io/
 [Kubernetes]: https://kubernetes.io/
+[next post]: {% post_url 2020-06-14-introduction-to-kubernetes %}
