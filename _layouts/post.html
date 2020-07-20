@@ -13,16 +13,23 @@ layout: default
       {%- if page.author -%}
         • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ page.author }}</span></span>
       {%- endif -%}</p>
-      <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
     {{ content }}
   </div>
 
+  <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+</article>
+<section class="post-footer">
+  <p class="center">Did you find it useful? Please share with others.</p>
+  <p class="center"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+  <p class="center"><a href="{{ "/" | relative_url }}">CloudQubes</a></p>
+</section>
+
+<section>
+  
   {%- if site.disqus.shortname -%}
     {%- include disquss_comments_universal.html -%}
   {%- endif -%}
-
-  <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
-</article>
+</section>

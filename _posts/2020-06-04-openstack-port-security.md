@@ -138,6 +138,15 @@ When using HOT, setting 'port_security_enabled' to false, will disable port secu
 
 Once port security is disabled no packet filtering will be appied on the incoming or outgoing traffic the particular port.
 
+If using an older version of OpenStack such as Mitaka, OpenStack CLI may not have the options to disable port security, of a virtual port. In that case you may use the `neutron` CLI.
+
+First find the ID of the port using `neutron port-list`.
+
+{% highlight shell %}
+$ neutron port-update --no-security-groups <port_id>
+$ neutron port-update <port_id> --port_security_enabled=False
+{% endhighlight %} 
+
 # Disable port security for network
 
 Port security can be disabled in the virtual network, such that all ports associated with the network will have port security disabled by default.
