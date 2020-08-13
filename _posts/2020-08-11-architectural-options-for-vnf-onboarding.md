@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "VNF Onboarding Architecture"
-date:   2020-08-11 18:20:00 +0530
+title:  "Architectural options for VNF onboarding"
+date:   2020-08-13 06:20:00 +0530
 categories: [insights, openstack]
 tags: [VNF, onboarding, heat, GVNFM, SVNFM, NFVO]
 ---
