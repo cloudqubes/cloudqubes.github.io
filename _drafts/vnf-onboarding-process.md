@@ -1,6 +1,17 @@
-purpose - Introduce the VNF onboarding methods to engineers
+purpose - Introduce the concept of VNF onboarding
 
-VNF onboarding is the term loosely used to cover all aspects of getting VNFs to run on the NFV infrastrucutre. It involves all the activities from concepts to instantiation of the VNF. It can be broken down to three phases
+
+
+
+
+
+# What is a VNF?
+
+A VNF is a group of VMs interconnected with virtual networks, and deliver a specific service. 
+
+
+
+used to cover all aspects of getting VNFs to run on the NFV infrastrucutre. It involves all the activities from concepts to instantiation of the VNF. It can be broken down to three phases
 Design
 Modeling
 Deployment
