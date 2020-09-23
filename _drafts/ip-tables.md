@@ -1,0 +1,13 @@
+source nat
+
+sudo iptables -t nat -A PREROUTING -i ens3 -j DNAT -p tcp --dport 3128 --to 10.48.250.93:3128
+
+sudo iptables -t nat -A POSTROUTING -o ens3 -j SNAT --to 10.199.254.116
+
+delete rule
+sudo iptables -t nat -D PREROUTING 1
+
+list with line number
+sudo iptables -nL --line-numbers -t nat
+
+sudo iptables -t nat -A PREROUTING -i eth1 -j DNAT -p tcp --dport 8006 --to 10.199.254.85:8006
