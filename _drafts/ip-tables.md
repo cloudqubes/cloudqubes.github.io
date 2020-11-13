@@ -1,8 +1,12 @@
-source nat
+
+Have to enable packet forwarding
+sudo sysctl -w net.ipv4.ip_forward=1
+
+
+source nat for NFV proxy
 
 sudo iptables -t nat -A PREROUTING -i ens3 -j DNAT -p tcp --dport 3128 --to 10.48.250.93:3128
-
-sudo iptables -t nat -A POSTROUTING -o ens3 -j SNAT --to 10.199.254.116
+sudo iptables -t nat -A POSTROUTING -o ens3 -j SNAT --to 10.199.254.107
 
 delete rule
 sudo iptables -t nat -D PREROUTING 1

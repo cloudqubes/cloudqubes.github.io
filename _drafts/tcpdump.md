@@ -18,3 +18,7 @@ sudo tcpdump -i eth1 -n icmp
 
 -n     Don’t convert host addresses to names.  This can be used to avoid DNS lookups.
 -nn    Don’t convert protocol and port numbers etc. to names either.
+
+filter for host
+tcpdump -i any -n host 172.16.0.1
+

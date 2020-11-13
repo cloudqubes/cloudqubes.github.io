@@ -26,11 +26,38 @@ $ sudo snap set system proxy.https="http://<proxy_ip>:<proxy_port>""
 
 # Install
 
+Check the available versions.
+Check the available versions
+{% highlight shell %}
+$ snap info microstack
+ubuntu@microstack-server:~$ snap info microstack
+name:      microstack
+summary:   OpenStack on your laptop
+publisher: Canonical✓
+license:   Apache-2.0
+description: |
+  MicroStack gives you an easy way to develop and test OpenStack
+  workloads on your laptop or in a virtual machine.
+snap-id: qMvFl14Ge7zDRxjx4AGmBgsa4pNL9cYW
+channels:
+  stable:          –
+  candidate:       –
+  beta:            ussuri 2020-10-21 (217) 386MB -
+  edge:            ussuri 2020-10-21 (217) 386MB -
+  rocky/stable:    –
+  rocky/candidate: –
+  rocky/beta:      –
+  rocky/edge:      rocky  2019-12-06 (195) 398MB classic
+{% endhighlight %}
+
 Install MicroStack:
 
 {% highlight shell %}
-$ sudo snap install microstack --classic --edge
+$ sudo snap install microstack --channel=rocky/edge --classic
 {% endhighlight %}
+
+
+
 
 # Initialize
 
