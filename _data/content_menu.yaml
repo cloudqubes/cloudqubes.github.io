@@ -1,0 +1,13 @@
+docs_list_title: Content Menu
+docs:
+  - title: NFV
+    url: /nfv
+
+  - title: Containers
+    url: /containers
+
+  - title: OpenStack
+    url: /openstack
+
+  - title: Linux
+    url: /linux

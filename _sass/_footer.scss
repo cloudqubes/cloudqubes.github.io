@@ -1,0 +1,39 @@
+$primary-color: #de2900;
+$secondary-color: #2e2d2d;
+
+footer{
+  background-color: $secondary-color;
+  color: whitesmoke;
+  a{
+    color: whitesmoke;
+    h2{
+      text-align: center;
+    }
+  }
+  a:hover{
+    text-decoration: none;
+    color: wheat;
+  }
+
+}
+
+
+ul.social-media-list{
+  list-style-type: none;
+  text-align: center;
+  padding: 10px;
+  li{
+    padding-bottom: 10px;
+    a{
+      color: whitesmoke;
+    }
+  };
+
+}
+.svg-icon{
+  height: 20px;
+  width: 20px;
+}
+svg{
+  fill: white;
+}

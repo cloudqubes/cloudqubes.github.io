@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Bash Scripts
-permalink: /bash/
+permalink: /category/:category_name
 ---
 <div class="home">
   {%- if site.posts.size > 0 -%}

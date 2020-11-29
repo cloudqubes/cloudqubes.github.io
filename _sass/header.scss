@@ -1,0 +1,49 @@
+@import 'colors';
+
+// .site-title{
+//   color: azure;
+// }
+
+// .site-title:visited{
+//   color: azure;
+
+// }
+
+// ol.site-menu{
+//   list-style: none;
+//   li{
+//     display: inline;
+//     padding: 8px;
+//   }
+// }
+
+// ol.content-menu{
+//   list-style: none;
+//   margin: 0px;
+//   // padding-top: 16px;
+//   li{
+//     display: inline;
+//     padding: 8px;
+//     a{
+//       color: azure;
+//     }
+//   }
+// }
+
+.header-row-2{
+  background-color: $primary-color;
+  color: white;
+  p{ 
+    color: white;
+  }
+}
+
+a.logo{
+  margin-top: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+

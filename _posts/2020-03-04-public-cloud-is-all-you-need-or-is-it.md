@@ -3,8 +3,8 @@ layout: post
 comments: true
 title:  "Public cloud is all you need, or is it?"
 date:   2020-03-05 04:35:00 +0530
-categories: [insights, nfv]
-tags: [public-cloud, hybrid-cloud, nfv]
+categories: [insights, NFV]
+tags: [public-cloud, hybrid-cloud, NFV]
 ---
 
 **Getting up and running with NFV is a costly affair. Is public cloud a better option?**

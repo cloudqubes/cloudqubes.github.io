@@ -2,7 +2,7 @@
 layout: post
 title:  "NFV and APIs - enablers for 5G"
 date:   2020-05-18 04:30:00 +0530
-categories: [insights, nfv]
+categories: [insights, NFV]
 tags: [nfv, 5G]
 ---
 

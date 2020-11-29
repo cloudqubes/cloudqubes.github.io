@@ -1,15 +1,34 @@
+@import 'colors';
+
 .post-link{
   font-family: 'Titillium Web', sans-serif;
-  color: #C31030;
+  font-size: 24px;
+  color: $text-color;
 }
 a.post-link:visited{
-  color: #C31030;
+  color: $text-color;
+}
+a.post-link:hover{
+  text-decoration: none;
+  color: $primary-color;
+}
 
+ul.post-list{
+  list-style-type: none;
+  padding-top: 20px;
+  padding-left: 0px;
+  li{
+    padding-bottom: 30px;
+  }
 }
 
 h1.post-title{
     font-family: 'Titillium Web', sans-serif;
-    color: #C31030;
+    color: $primary-color;
+}
+
+article.post{
+  padding-top: 20px;
 }
 
 .post-content{
@@ -17,21 +36,21 @@ h1.post-title{
         font-family: 'Titillium Web', sans-serif;
         font-size: 26px;
         font-weight: 600;
-        color: #C31030;
+        color: $primary-color;
     }
     
     h2{
         font-family: 'Titillium Web', sans-serif;
         font-size: 20px;
         font-weight: 600;
-        color: #C31030;
+        color: $text-color;
     }  
 
     h3{
       font-family: 'Titillium Web', sans-serif;
       font-size: 18px;
       font-weight: 400;
-      color: #C31030;
+      color: $text-color;
   } 
 }
 
@@ -43,9 +62,9 @@ p{
 
 }
 
-abbr{
-    color: #C31030;
-    text-decoration: none;
+abbr[title]{
+  color: $other-color;
+  text-decoration: none !important;
 }
 
 p.center{

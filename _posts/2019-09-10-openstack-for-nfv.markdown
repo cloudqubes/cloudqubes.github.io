@@ -2,7 +2,7 @@
 layout: post 
 title:  "OpenStack for NFV" 
 date:   2019-09-10 04:18:00 +0530 
-categories: NFV cloud telco OpenStack 
+categories: insights NFV
 --- 
 
 In 2013 ETSI published their [second white paper] [white_paper] on NFV, introducing the NFV architectural framework. This framework focused on defining the NFV building blocks and their interaction in an architectural context. The VIM which was identified as one of the components within the Management and Orchestration, was intended to manage the virtual resources in NFV. While not explicitly mentioned OpenStack must have been a candidate for VIM since the white paper mentions the intention of using existing "cloud management systems".  

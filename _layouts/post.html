@@ -1,35 +1,46 @@
 ---
 layout: default
 ---
-<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
 
-  <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
-    <p class="post-meta">
-      <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        {{ page.date | date: date_format }}
-      </time>
-      {%- if page.author -%}
-        • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ page.author }}</span></span>
-      {%- endif -%}</p>
-  </header>
+  <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <div class="post-content e-content" itemprop="articleBody">
-    {{ content }}
-  </div>
+    <header class="post-header">
+      <p class="post-meta">
+        {%- assign word_count = page.content | number_of_words -%}
+        {%- assign read_minutes = word_count | divided_by: 200 -%}
+        <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+          {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+          {{ page.date | date: date_format }}
+        </time>
+        <span>- {{read_minutes}} Min read</span>
+        {%- if page.author -%}
+          • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ page.author }}</span></span>
+        {%- endif -%}
+      </p>
+      <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
+    </header>
 
-  <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
-</article>
-<section class="post-footer">
-  <p class="center">Did you find this useful? Please share.</p>
-  <p class="center"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
-  <p class="center"><a href="{{ "/" | relative_url }}">CloudQubes</a></p>
-</section>
+    <div class="post-content e-content" itemprop="articleBody">
+      {{ content }}
+    </div>
 
-<section>
-  
-  {%- if site.disqus.shortname -%}
-    {%- include disquss_comments_universal.html -%}
-  {%- endif -%}
-</section>
+    <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+  </article>
+  <section class="post-footer">
+    <p class="center">Did you find this useful? Please share.</p>
+    <p class="center"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+    <p class="center"><a href="{{ "/" | relative_url }}">CloudQubes</a></p>
+  </section>
+
+  <section>
+    
+    {%- if site.disqus.shortname -%}
+      {%- include disquss_comments_universal.html -%}
+    {%- endif -%}
+  </section>
+</div>
+<div class="col-sm-2"></div>
+</div>

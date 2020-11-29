@@ -2,7 +2,7 @@
 layout: post
 title:  "Post COVID-19 Telco Cloud Strategy"
 date:   2020-07-20 03:30:00 +0530
-categories: [insights, nfv]
+categories: [insights, NFV]
 tags: [nfv, covid-19, strategy, cloud]
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "Happy Virtualizing with Multipass"
 date:   2020-01-18 05:48:00 +0530
-categories: [hands-on, linux]
+categories: [hands-on, Linux]
 tags: [multipass, VM]
 ---
 

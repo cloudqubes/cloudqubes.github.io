@@ -2,7 +2,7 @@
 layout: post
 title:  "Logging with NGINX"
 date:   2020-02-10 05:56:00 +0530
-categories: [hands-on, linux]
+categories: [hands-on, Linux]
 tags: [NGINX reverse-proxy openstack logging]
 ---
 

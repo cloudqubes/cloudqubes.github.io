@@ -2,7 +2,7 @@
 layout: post
 title:  "SSH port forwarding with PuTTY"
 date:   2020-02-17 14:20:00 +0530
-categories: [hands-on, linux]
+categories: [hands-on, Linux]
 tags: [linux, ssh, port forwarding, PuTTY, windows]
 ---
 

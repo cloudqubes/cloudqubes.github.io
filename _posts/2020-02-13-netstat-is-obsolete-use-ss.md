@@ -2,7 +2,7 @@
 layout: post
 title:  "netstat is obsolete, use 'ss'"
 date:   2020-02-13 18:20:00 +0530
-categories: [hands-on, linux]
+categories: [hands-on, Linux]
 tags: [linux, netstat, ss, network, tools]
 ---
 

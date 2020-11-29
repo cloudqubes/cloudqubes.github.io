@@ -2,7 +2,7 @@
 layout: post
 title:  "Storage Options for NFV"
 date:   2020-02-04 05:56:00 +0530
-categories: [insights, nfv]
+categories: [insights, NFV]
 tags: [storage, SAN, NAS, NFV, Software Defined Storage]
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "Building the Business Case for NFV"
 date:   2020-05-21 04:00:00 +0530
-categories: [insights, nfv]
+categories: [insights, NFV]
 tags: [nfv, business-case]
 ---
 

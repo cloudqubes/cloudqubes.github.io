@@ -3,7 +3,7 @@ layout: post
 title:  "Install DevStack via a Proxy"
 date:   2020-02-20 06:20:00 +0530
 categories: [qubefix]
-tags: [devstack, proxy, linux, openstack, sub]
+tags: [devstack, proxy, Linux, openstack, sub]
 my_categories: [sub]
 ---
 

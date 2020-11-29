@@ -3,7 +3,7 @@ layout: post
 comments: true
 title:  "Avoid licensing pitfalls in NFV"
 date:   2020-04-02 06:35:00 +0530
-categories: [insights, nfv]
+categories: [insights, NFV]
 tags: [nfv, licensing, model, tco]
 ---
 

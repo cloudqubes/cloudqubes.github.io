@@ -3,7 +3,7 @@ layout: post
 comments: true
 title:  "What's in a VNFM?"
 date:   2020-03-27 06:35:00 +0530
-categories: [insights, nfv]
+categories: [insights, NFV]
 tags: [nfv, vnfm, life-cycle-management, orchestration]
 ---
 
