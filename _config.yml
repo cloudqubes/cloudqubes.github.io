@@ -32,10 +32,9 @@ show_excerpts: true
 sass:
   load_paths:
     - _sass
-    # - /home/indika/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/bootstrap-4.5.3/assets/stylesheets/
 
 # Build settings
-theme: minima
+# theme: minima
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
