@@ -29,6 +29,7 @@ github_username:  cloudqubes
 permalink: /:categories/:title/
 
 show_excerpts: true
+excerpt_separator: <!--more-->
 sass:
   load_paths:
     - _sass

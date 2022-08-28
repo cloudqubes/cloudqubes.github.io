@@ -17,6 +17,7 @@ gem "minima", "~> 2.5"
 # If you have any plugins, put them here!
 # This development is done on remote container
 
+gem "webrick"
 
 group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.12"

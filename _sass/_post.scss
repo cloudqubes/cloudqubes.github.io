@@ -25,6 +25,7 @@ ul.post-list{
 h1.post-title{
     font-family: 'Titillium Web', sans-serif;
     color: $primary-color;
+    font-size: 2.2rem;
 }
 
 article.post{
@@ -78,3 +79,7 @@ section.post-footer{
   padding-bottom: 5px;
 }
 
+img + em { 
+  display: block;
+  text-align: center;
+}
