@@ -83,3 +83,10 @@ img + em {
   display: block;
   text-align: center;
 }
+
+figure.highlight{
+  background-color: #f4f4f4;
+  border: 1px solid #d7d7d7;
+  padding: .5rem;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.16), 0 2px 3px rgba(0,0,0,0.23);
+}
