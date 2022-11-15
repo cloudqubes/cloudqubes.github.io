@@ -1,0 +1,31 @@
+{%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+{%- assign word_count = post.content | number_of_words -%}
+{%- assign read_minutes = word_count | divided_by: 200 -%}
+<!-- <span>- <a href="category/{{post.categories[1] | downcase}}">{{post.categories[1] | upcase}}</a> - {{read_minutes}} Min read</span> -->
+<span>
+  {% for tag in post.tags %}
+    {% assign tag_slug = tag | slugify: "raw" %}
+    <a class="tag-link"
+      href={{ site.baseurl | append: "/tags/" | append: tag_slug | append: "/" }}
+      rel="category tag">
+      {{ tag }}
+    </a>
+  {% endfor %}
+</span>
+<span class="post-meta">{{ post.date | date: date_format }}</span>
+<span>- {{read_minutes}} Min read</span>
+<h3>
+  <a class="post-link" href="{{ post.url | relative_url }}">
+    {{ post.title | escape }}
+  </a>
+</h3>
+{%- if site.show_excerpts -%}
+  <!-- {{ post.content | strip_html | truncatewords: 50 }} -->
+  {% if post.subtitle %}
+    <div class="subtitle">
+      {{ post.subtitle }}                    
+    </div>
+  {% else %}  
+    {{ post.excerpt }}
+  {% endif %}
+{%- endif -%}

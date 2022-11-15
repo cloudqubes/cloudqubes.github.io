@@ -15,24 +15,10 @@ layout: default
       <ul class="post-list">
         {%- for post in site.posts -%}
           {%- unless post.my_categories contains "sub" -%}
-          <li>
-            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-            {%- assign word_count = post.content | number_of_words -%}
-            {%- assign read_minutes = word_count | divided_by: 200 -%}
-            <span class="post-meta">{{ post.date | date: date_format }}</span>
-            <!-- <span>- <a href="category/{{post.categories[1] | downcase}}">{{post.categories[1] | upcase}}</a> - {{read_minutes}} Min read</span> -->
-            <span>- {{read_minutes}} Min read</span>
-              <h3>
-                <a class="post-link" href="{{ post.url | relative_url }}">
-                  {{ post.title | escape }}
-                </a>
-              </h3>
-              {%- if site.show_excerpts -%}
-                <!-- {{ post.content | strip_html | truncatewords: 50 }} -->
-                {{ post.excerpt }}
-              {%- endif -%}
-            {%- endunless -%}
-        </li>
+            <li>
+              {% include article_list_item.html %}
+            </li>
+          {%- endunless -%}
         {%- endfor -%}
       </ul>
 

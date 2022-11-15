@@ -1,32 +1,35 @@
 ---
 layout: post
-title:  "What is the best database (for my app)?"
+title:  "SQL vs NoSQL: How to choose the best database"
+subtitle: "Still thinking on which database to use for your next app?"
 date:   2022-11-03 07:00:00 +0530
-categories: [insights, database]
-tags: ["Database", "NoSQL"]
+categories: [devops, insights]
+tags: ["Databases"]
 ---
 
+<div class="header-highlight">
+Are NoSQL databases better than SQL databases? No, not always. You must choose the database that fits your use case.
+</div>
 
+You’ve got an exciting idea to build a new digital product. You start coding, and need to choose a database. "Everyone out there is talking about that new ultra-scalable NoSQL database. I will also use it", you think.
 
-You’ve got an exciting idea to build a new digital product. You start coding, and ask yourself, “What database should I use?”.  “Everyone out there is talking about that hot, new, powerful database. I will use the same.” comes the innermost answer.
-
-Halfway through the development, you realize that the hot, new database has a frustrating learning curve, a complex query interface, and is not at all suitable for your application. You decide to dump it and settle down for a more proven solution. 
+Halfway through the development, you realize that the new ultra-scalable database has a frustrating learning curve, a complex query interface, and is not at all suitable for your application. You decide to dump it and settle down for a more proven technology. 
 
 # Cost of wrong decisions
 
-However, you have to pay a price. You must redesign your data model and discard some of the code that you have already written. This is going to impact your delivery timelines. 
+However, you have to pay a price. You must redesign your data model and rewrite some of the code. This is going to impact your delivery timelines. 
 
-You are not the only one who has had this bad experience. There are many types of databases, and they exist for different purposes. As a developer, it’s your responsibility to select the correct one for your use case because an unfitting database will cost you time and money. 
+You are not the only one who has had this bad experience. There are many types of databases out there. They exist for different purposes. As a developer, it’s your responsibility to select the correct one for your use case because an unfitting database will cost you both time and money. 
 
-So that you can choose the best database for your next application, let’s discuss about the popular types of databases and their use cases.
+# SQL vs NoSQL databases
 
-# Relational vs NoSQL Databases
+Technically, the topic should have been *relational vs non-relational databases*. But, somehow the term NoSQL is deeply established. 
 
 ## Relational Databases
 
 Relational database and SQL are two frequently associated terms with databases, and there is a good reason for that. Relational databases were the prominent database systems until about 2009 from the 1970s. 
 
-Relational databases are built on the relational model proposed by E.F Codd, in a [paper published in communications of the ACM] [relational-model], in 1970. The relational model defines a relation as a set of n tuples, where each tuple is an array of ordered columns. 
+Relational databases are built on the relational model proposed by E.F Codd, in a [paper published in communications of the ACM] [relational-model], in 1970. The original relational model defines a relation as a set of n tuples, where each tuple is an array of ordered columns. Most relational databases implement this model with some deviations. As an example, a table in a relational database correspond to a relation with unordered columns.
 
 Let's see how we can model a student dataset consisting of students and their classes according to the relational model. 
 
@@ -35,7 +38,7 @@ Let's see how we can model a student dataset consisting of students and their cl
 
 The Students and Classes are relations with 2 and 5 tuples respectively. The “Student_Classes” defines a many-to-many relationship between them.
 
-Structured Query Language (SQL) was developed based on this relational model. Relational model and SQL paved the way for the development of very successful, widely used relational database software such as [Oracle], [MySQL], [PostgreSQL], etc. These relational databases have proved their capability by efficiently handling billions of records in many web and enterprise applications.
+Structured Query Language (SQL) was developed based on this relational model to manipulate data stored in a relational database. Relational model and SQL paved the way for the development of very successful, widely used relational database software such as [MySQL], [MariaDB], [PostgreSQL], etc. These relational databases have proved their capability by efficiently handling billions of records in many web and enterprise applications.
 
 ## Limitations of relational databases
 The growth of Web 2.0 applications from 2004, began pushing relational database technology to its limits. Web 2.0 companies had to handle exponentially growing datasets consisting of billions and billions of records. To handle such huge data volumes more CPU and memory are required. However, there is a certain limitation of CPU and memory that can be provisioned in a single machine. Beyond that, the only option is to scale horizontally - increase the number of servers. 
@@ -109,7 +112,7 @@ Let’s model our student dataset in a document database.
 
 Due to the flexibility of the document data model, document databases are suitable for a wide variety of use cases like blogs, e-commerce, and enterprise applications. Most datasets that will fit into a relational data model can be modeled to fit a document database as well. However, since there is no support for SQL the data must be modeled to support efficient querying according to the individual use cases.
 
-[MongoDB] is a popular open-source document DB that is also avaialble as a cloud service. [Amazon DocumentDB] and [Google Firestore] are document databases in the cloud.
+[MongoDB] is a popular open-source document DB that is also available as a cloud service. [Amazon DocumentDB] and [Google Firestore] are document databases in the cloud.
 
 This is how we create our student database with [MongoDB].
 
@@ -248,30 +251,19 @@ A database is an integral part of any web, mobile or enterprise application, and
 
 Once an application is in operation, swapping the database is no easy task. Therefore, you must ensure that you are choosing the best database right at the beginning.
 
-## Things to consider - your use case must come first
 The best database for your application is not necessarily the most scalable or the most popular database out there. Your use case determines the type of data you are working with and the scale. So, your use case is the most important factor for your decision about the database.
 
-However, there are some other factors that will also come into play.
+New technologies emerge, and create hype in the industry time to time. You may be tempted to select a database technology simply because it’s the hottest trend. The popularity of NoSQL databases in the recent past caused many developers to adopt them even for inappropriate use cases. 
 
-1. Expertise
-> If you have previous experience with a particular database, you tend to stick to it and avoid the learning curve of using totally new technology. 
+<div style=highlight">
+Always choost the database that suits your dataset and your application. Choosing a database based on the industry trend is the worst thing you could do.
+</div>
 
-2. Programming language/framework
-> Some programming languages and frameworks officially support specific database types. As an example, Both [Django] and [RubyOnRails] support [PostgreSQL] and [MySQL] out of the box. Similarly, [Node.js] supports [MongoDB]. If you have already decided on the programming language or the framework, you may prefer using one of those officially supported databases.
+There is no silver bullet in database management systems. Therefore, you must analyze your use case and select the best database that fits your needs and deliver your expected results. 
 
-3. Industry trend
-> From time to time, new technologies emerge, and create hype in the industry. You may be tempted to select a database technology simply because it’s the hottest trend. The popularity of NoSQL databases in the recent past caused many developers to adopt them even for inappropriate use cases. 
-
-Expertise and the programming language could be fairly reasonable considerations when choosing a database. But, the use case must be the most weighted factor of your database decision. Choosing the database based on the industry trend is the worst thing you could do.
-
-## The best database for your application
-There is no silver bullet in database management systems. Therefore, you must analyze your use case and select the best database that fits your needs and deliver your expected results. However, some databases can be adapted for multiple use cases. As an example, you can use a relational database to store time series data. But, using a time series database will be more efficient. 
-
-## Hype around NoSQL
+# Hype around NoSQL
 
 NoSQL databases have created lots of industry hype. NoSQL databases could be more scalable than relational databases due to their design. But, if your data model does not fit a NoSQL database, the scalability of NoSQL is not going to help you. Also, the fact that NoSQL databases are more scalable does not imply that relational databases are not scalable. The recent developments in relational databases have added various scaling features that we hope to discuss in some upcoming articles. 
-
-If you are choosing a NoSQL database, the most important thing is to choose the right type of NoSQL database as there are several variants in the NoSQL domain. 
 
 Always remember that a wrong design with the database will definitely impact your application launch. You do not want to miss your deadline just because you were messing with the most powerful database technology on the planet.
 
@@ -305,3 +297,4 @@ Always remember that a wrong design with the database will definitely impact you
 [RubyOnRails]:https://rubyonrails.org
 [Node.js]: https://nodejs.org/en/
 [Oracle]: https://www.oracle.com/database/technologies/
+[MariaDB]: https://mariadb.org

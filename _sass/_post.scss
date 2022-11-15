@@ -22,10 +22,16 @@ ul.post-list{
   }
 }
 
+div.subtitle{
+  font-family: 'Raleway', sans-serif;
+  color: #2a2a2a;
+  font-size: 17px;  
+}
+
 h1.post-title{
     font-family: 'Titillium Web', sans-serif;
     color: $primary-color;
-    font-size: 2.2rem;
+    font-size: 3rem;
 }
 
 article.post{
@@ -89,4 +95,27 @@ figure.highlight{
   border: 1px solid #d7d7d7;
   padding: .5rem;
   box-shadow: 0 2px 3px rgba(0,0,0,0.16), 0 2px 3px rgba(0,0,0,0.23);
+}
+
+.header-highlight{
+  // display: block;
+  font-family: 'Raleway', sans-serif;
+  color: #2a2a2a;
+  font-size: 32px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.tag-link{
+  font-family: 'Raleway', sans-serif;
+  color: #546e7a;
+  font-size: 1rem;
+  padding: .1rem;
+  // border: 1px solid #546e7a;
+  background-color: #f5f8ff;
+  // border-radius: 10%;
+}
+
+.tag-link:hover{
+  background-color: #e7edfd;
+  text-decoration: none;
 }
