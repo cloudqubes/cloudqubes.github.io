@@ -31,7 +31,7 @@ div.subtitle{
 h1.post-title{
     font-family: 'Titillium Web', sans-serif;
     color: $primary-color;
-    font-size: 3rem;
+    font-size: 2.8rem;
 }
 
 article.post{
@@ -91,18 +91,34 @@ img + em {
 }
 
 figure.highlight{
-  background-color: #f4f4f4;
+  // background-color: #fafafa;
+  margin-left: 1rem;
   border: 1px solid #d7d7d7;
+  border-left: .5rem solid #1565c0;
   padding: .5rem;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.16), 0 2px 3px rgba(0,0,0,0.23);
+  // overflow: hidden;
+  // box-shadow: 0 1px 1px rgba(0,0,0,0.16), 0 1px 1px rgba(0,0,0,0.23);
 }
 
 .header-highlight{
-  // display: block;
-  font-family: 'Raleway', sans-serif;
+  // font-family: 'Raleway', sans-serif;
+  font-family: 'Titillium Web', sans-serif;
   color: #2a2a2a;
-  font-size: 32px;
+  font-size: 1.6rem;
+  font-weight: 400;
+  // border-top: 1px solid #2a2a2a;
+  // border-bottom: 1px solid #2a2a2a;
+  padding: .8rem 2rem;
+}
+
+.inline-highlight{
+  font-family: 'Raleway', sans-serif;
+  color: #1565c0;
+  font-size: 1.8rem;
   border-top: 1px solid #2a2a2a;
+  border-bottom: 1px solid #2a2a2a;
+  padding: .5rem 2rem;
+  margin-bottom: 1rem;
 }
 
 .tag-link{

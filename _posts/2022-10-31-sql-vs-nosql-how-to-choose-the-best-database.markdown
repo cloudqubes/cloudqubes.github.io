@@ -1,14 +1,15 @@
 ---
 layout: post
 title:  "SQL vs NoSQL: How to choose the best database"
-subtitle: "Still thinking on which database to use for your next app?"
+subtitle: >
+  Thinking on using a NoSQL database for your next app. Do not conclude until you have read this article.
 date:   2022-11-03 07:00:00 +0530
 categories: [devops, insights]
 tags: ["Databases"]
 ---
 
 <div class="header-highlight">
-Are NoSQL databases better than SQL databases? No, not always. You must choose the database that fits your use case.
+Are NoSQL databases better than SQL databases? <br> No, not always. You must choose the database that fits your use case.
 </div>
 
 You’ve got an exciting idea to build a new digital product. You start coding, and need to choose a database. "Everyone out there is talking about that new ultra-scalable NoSQL database. I will also use it", you think.
@@ -255,8 +256,8 @@ The best database for your application is not necessarily the most scalable or t
 
 New technologies emerge, and create hype in the industry time to time. You may be tempted to select a database technology simply because it’s the hottest trend. The popularity of NoSQL databases in the recent past caused many developers to adopt them even for inappropriate use cases. 
 
-<div style=highlight">
-Always choost the database that suits your dataset and your application. Choosing a database based on the industry trend is the worst thing you could do.
+<div class="inline-highlight">
+Always choose the database that suits your dataset and your application. Choosing a database just because it's the new trend is the worst thing you could do.
 </div>
 
 There is no silver bullet in database management systems. Therefore, you must analyze your use case and select the best database that fits your needs and deliver your expected results. 
