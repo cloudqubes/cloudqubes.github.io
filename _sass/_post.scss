@@ -107,8 +107,8 @@ figure.highlight{
   font-size: 1.6rem;
   font-weight: 400;
   // border-top: 1px solid #2a2a2a;
-  // border-bottom: 1px solid #2a2a2a;
-  padding: .8rem 2rem;
+  border-bottom: 1px solid #2a2a2a;
+  margin-bottom: .5rem;
 }
 
 .inline-highlight{
@@ -126,6 +126,7 @@ figure.highlight{
   color: #546e7a;
   font-size: 1rem;
   padding: .1rem;
+  margin-right: .2rem;
   // border: 1px solid #546e7a;
   background-color: #f5f8ff;
   // border-radius: 10%;

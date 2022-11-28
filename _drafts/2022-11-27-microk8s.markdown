@@ -1,0 +1,101 @@
+
+
+multipass launch -n microk -m 2G file:////home/indika/Download/focal-server-cloudimg-amd64.img
+
+
+Target profile of reader
+New DevOps engineers or aspiring DevOps engineers who want to learn about Kubernetes.
+
+Why should he or she read this
+Understand the different types of workloads that can be hosted on Kubernetes
+
+
+Outline
+Workloads
+Controllers for workloads
+Different types of workloads
+
+
+Kubernetes workloads
+
+A workload is a containerized application running on a Kubernetes cluster.
+
+There are several types of workloads.
+
+
+
+A workload consists of a group of pods where each pod runs one or more containers. In a production Kubernetes cluster, the pods are distributed across multiple nodes. There are several methods you can deploy a workload.
+
+# Create pods individually
+
+You can use the kubectl command to create individual pods.
+ubuntu@microk:~$ microk8s kubectl run nginx --image=nginx
+pod/nginx created
+ubuntu@microk:~$ microk8s kubectl get pods
+NAME   READY   STATUS              RESTARTS   AGE
+Nginx   0/1     ContainerCreating   0          11s
+ubuntu@microk:~$ 
+
+
+You can delete the pod using the `kubectl delete` command.
+
+ubuntu@microk:~$ microk8s kubectl delete pods/nginx
+pod "nginx" deleted
+
+
+Pods and workloads are Kubernetes objects stored in the etcd datastore. In this method, we are managing Kubernetes objects using imperative commands.
+
+This works for creating one or two pods for a testing purpose. But, you won’t enjoy doing this for an application that has hundreds of pods. 
+
+Instead of creating pods individually, we can use Kubernetes configuration files.
+
+
+# Kubernetes configuration files
+
+We can use YAML formatted configuration files to to define Kubernetes objects, and then use that file as an input to the `kubectl` command. 
+
+There are two ways we can use the Kubernetes configuration files.
+
+## Imperatively mange the workload objects using configuration files
+
+Here’s a configuration file to create a deployment with one Nginx pod. A `deployment` is a type of Kubernetes workloads
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+To create this this de
+
+ubuntu@microk:~$ microk8s kubectl create -f nginx 
+deployment.apps/nginx-deployment created
+ubuntu@microk:~$ microk8s kubectl get pods
+No resources found in default namespace.
+ubuntu@microk:~$ microk8s kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+nginx-deployment-7fb96c846b-v8gfr   0/1     Pending   0          15s
+
+
+
+
+# Declaratively mange the workload objects using configuration files
+
+
+
+
+

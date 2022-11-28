@@ -5,7 +5,7 @@ subtitle: >
   This article will help you grasp the basic concepts of Kubernetes and will also make you familiar with the jargon .
 date:   2022-11-26 07:00:00 +0530
 categories: [devops, insights]
-tags: ["Kubernetes"]
+tags: [Kubernetes]
 ---
 
 <div class="header-highlight">
@@ -14,9 +14,9 @@ You must understand these basic concepts in Kubernetes, before diving deeper dow
 
 Kubernetes is a platform for containerized applications.
 
-Depending on complexity and scale a containerized application could be composed of hundreds or even thousands of containers. In a production setup, these numbers could pose a challenge. The individual containers need to be distributed across computing nodes in a cloud and if any container crashes while in operation it must be restored. This is too much work to do manually.
+A containerized application could be composed of hundreds or even thousands of containers. Managing such an application in production is challenging. The individual containers need to be distributed across computing nodes in a cloud and if any container crashes while in operation, it must be restored. This is too much work to do manually.
 
-Kubernetes solves this problem by automating the life cycle of a containerized application from deployment to the termination. Kubernetes can schedule containers into computing nodes and it will ensure the crashed or failed containers are restored. Kubernetes can also scale an application based on parameters such as CPU utilization.
+Kubernetes solves this problem by automating the life cycle of a containerized application from deployment to termination. Kubernetes can schedule containers into computing nodes and it will ensure the crashed or failed containers are restored. Kubernetes can also scale an application based on parameters such as CPU utilization.
 
 # Workloads
 
@@ -66,7 +66,7 @@ Container runtime is a software that is responsible for running the containers. 
 
 ## kubelet
 
-The Kubelet is an agent running in each worker node. 
+Kubelet is an agent running in each worker node. 
 
 Kubelet registers the worker node with the Kubernetes cluster control plane. The control plane instructs the kubelet about the pods and containers that should run in the node. Then, kubelet ensures those containers are running and healthy.
 

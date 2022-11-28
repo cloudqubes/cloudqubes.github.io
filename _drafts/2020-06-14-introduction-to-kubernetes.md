@@ -3,7 +3,7 @@ layout: post
 title:  "Introduction to Kubernetes"
 date:   2020-06-14 03:30:00 +0530
 categories: [hands-on, containers]
-tags: [kubernetes, docker, containerization, CNF]
+tags: [Kubernetes, docker, containerization, CNF]
 ---
 
 [Kubernetes] is a hot topic in cloud computing. While telcos are yet to adapt it, [Kubernetes] is the choice for most enterprise application developers. It has enabled small to hyperscale technology companies to deliver services, following an agile methodology.

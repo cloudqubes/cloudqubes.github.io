@@ -1,4 +1,4 @@
 ---
 layout: tags
-tag-name: kubernetes
+tag-name: Kubernetes
 ---
