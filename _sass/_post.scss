@@ -65,7 +65,7 @@ article.post{
 p{
     font-family: 'Raleway', sans-serif;
     color: #2a2a2a;
-    font-size: 17px;
+    font-size: 1rem;
 
 }
 
@@ -108,7 +108,7 @@ figure.highlight{
   font-weight: 400;
   // border-top: 1px solid #2a2a2a;
   border-bottom: 1px solid #2a2a2a;
-  margin-bottom: .5rem;
+  margin-bottom: 1rem;
 }
 
 .inline-highlight{
@@ -135,4 +135,9 @@ figure.highlight{
 .tag-link:hover{
   background-color: #e7edfd;
   text-decoration: none;
+}
+
+li{
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1.1rem;
 }

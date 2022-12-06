@@ -166,4 +166,3 @@ This completes our hands on exercise with containers, where we installed [Docker
 [NGINX]: https://hub.docker.com/_/nginx
 [Containered]: https://containerd.io/
 [Kubernetes]: https://kubernetes.io/
-[next post]: {% post_url 2020-06-14-introduction-to-kubernetes %}

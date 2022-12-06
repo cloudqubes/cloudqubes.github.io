@@ -2,7 +2,7 @@
 layout: post
 title:  "A friendly introduction to Kubernetes"
 subtitle: >
-  This article will help you grasp the basic concepts of Kubernetes and will also make you familiar with the jargon .
+  This article will help you grasp the basic concepts of Kubernetes and will also make you familiar with the jargon.
 date:   2022-11-26 07:00:00 +0530
 categories: [devops, insights]
 tags: [Kubernetes]
@@ -120,5 +120,6 @@ The best approach for creating workloads is to use Kubernetes configuration file
 
 Then, the Kubernetes control plane instructs the kubelets in worker nodes to run the containers as you have defined in the configuration file. If a pod crashes due to a failure of the worker node or a bug in your software Kubernetes will restore it in any of the available worker nodes.
 
-In the next article, we will talk more about configuration files and managing workloads in Kubernetes.
+In the [next article], we will talk more about configuration files and managing workloads in Kubernetes.
 
+[next article]: {{site.baseurl}}{% post_url 2022-12-06-running-containerized-applications-in-Kubernetes %}
