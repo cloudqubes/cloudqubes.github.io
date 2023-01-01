@@ -4,7 +4,7 @@ title:  "What is a Service in Kubernetes"
 subtitle: > 
   Introduce the concept of Kubernetes Services with a hands-on tutorial.
 date:   2022-12-28 11:00:00 +0530
-categories: [devops, hands-on]
+categories: [devops, tutorial]
 tags: [Kubernetes]
 ---
 
