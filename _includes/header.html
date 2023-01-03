@@ -21,19 +21,32 @@
       {%- endif -%}
     </div>
   </div> -->
-  <div class="row header-row-2">
-    <div class="col-sm-2">
-      <a href="/" class="logo">
-        <!-- <img src="{{site.baseurl}}/assets/images/logo_v1.png" width="90" height="90" alt="Logo"> -->
-        <img src="{{site.baseurl}}/assets/images/logo_v2.svg" width="90" height="90" alt="Logo" title="Home">
-      </a>
+  <div class="header-row-2">
+    <div class="header-row-container">
+      <div class="brand">
+        <div>
+          
+        </div>
+        <a href="/" class="logo">
+          <img src="{{site.baseurl}}/assets/images/logo_v2.svg" width="90" height="90" alt="Logo" title="Home">
+        </a>
+        <div class="brand-name">
+          <h1 class="main-heading">{{ site.title | escape }}</h1>
+        </div>
+      </div>
+  
+      <div class="menu-container">
+        <nav class="main-menu">
+          {% assign menu_items = site.data.main_menu.items %}
+          <ul class="site-menu">
+            {%- for item in menu_items -%}
+              <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </nav>  
+      </div>      
     </div>
-    <div class="col-sm-8">
-      <h1>{{ site.title | escape }}</h1>
-      <p>Diffusing The cloud.</p>
-      <div></div>
-    </div>
-    <div class="col-sm-2"></div>
+
 
   </div>
 </header>

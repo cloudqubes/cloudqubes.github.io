@@ -1,13 +1,13 @@
-docs_list_title: Main Menu
-docs:
-  - title: Blog
+# docs_list_title: Main Menu
+items:
+  # - title: Blog
+  #   url: /
+
+  - title: Articles
     url: /
 
-  - title: Bash
-    url: /bash
+  - title: Recipes
+    url: /recipes
 
-  - title: QubeFix
-    url: /qubefixes
-
-  - title: About
-    url: /about
+  # - title: About
+  #   url: /about

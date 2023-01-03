@@ -1,0 +1,33 @@
+---
+layout: page
+title: Recipes
+subheading: Curated recipes for DevOps pros to complete the task at hand
+permalink: /recipes/
+---
+<div class="home">
+  {%- if site.posts.size > 0 -%}
+    <ul class="post-list">
+      {%- for post in site.posts -%}
+        {%- if post.categories contains "recipe" -%}
+          <!-- <li>
+            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+            <span class="post-meta">{{ post.date | date: date_format }}</span>
+            <h3>
+              <a class="post-link" href="{{ post.url | relative_url }}">
+                {{ post.title | escape }}
+              </a>
+            </h3>
+            {%- if site.show_excerpts -%}
+              {{ post.excerpt }}
+            {%- endif -%}
+          </li> -->
+          <li>
+            {% include article_list_item.html %}
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+  {%- endif -%}
+
+</div>
