@@ -1,0 +1,19 @@
+# docs_list_title: Blog Menu
+items:
+  - title: Kubernetes
+    url: /kubernetes
+
+  - title: DevOps
+    url: /devops
+
+  - title: Cloud
+    url: /cloud
+
+  - title: Linux
+    url: /linux
+
+  - title: Coding
+    url: /coding
+
+  - title: Telecom
+    url: /telecom
