@@ -5,7 +5,7 @@ subtitle: >
   Thinking on using a NoSQL database for your next app. Do not conclude until you have read this article.
 date:   2022-11-03 07:00:00 +0530
 categories: [devops, insights]
-tags: ["Databases"]
+tags: [Design]
 ---
 
 <div class="header-highlight">

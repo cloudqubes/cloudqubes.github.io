@@ -1,15 +1,50 @@
 <header class="site-header" role="banner">
   <div class="header-row-2">
-    <div class="header-row-container">
+    <div class="header-row-container justify-space-between">
       <div class="brand">
         <a href="/" class="logo">
           <img src="{{site.baseurl}}/assets/images/logo_v2.svg" width="90" height="90" alt="Logo" title="Home">
         </a>
         <div class="brand-name">
-          <h1 class="main-heading">{{ site.title | escape }}</h1>
+          <a href="/" class="no-underline-link">
+            <h1 class="main-heading">{{ site.title | escape }}</h1>
+          </a>
         </div>
       </div>
-  
+
+      <div class="subscribe-link-container" >
+        <a id="subscribe-link" href=""">
+          Upgrade my DevOps skills
+        </a>
+        <!-- <div id="subscribe-link" href="" onclick="testFunction()">
+          Upgrade my DevOps skills
+        </div> -->
+      </div>
+   
+    </div>
+
+
+
+  </div>
+
+  <div class="header-row-2">
+    <div id="subscribe-form" class="header-row-container hide justify-space-between" >
+      <div class="subscribe-form-container justify-center" >
+        <div class="align-center">
+          <iframe src="https://cloudqubes.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>          
+        </div>
+        
+      </div>
+      <div id="close-subscribe-form" class="" >
+        <span class="material-symbols-outlined">
+          close
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-row-2" >
+    <div class="header-row-container top-and-bottom-borders">
       <div class="menu-container">
         <nav class="main-menu">
           {% assign menu_items = site.data.main_menu.items %}
@@ -19,9 +54,8 @@
             {%- endfor -%}
           </ul>
         </nav>  
-      </div>      
+      </div>        
     </div>
-
-    <!-- <iframe src="https://cloudqubes.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe> -->
   </div>
+
 </header>

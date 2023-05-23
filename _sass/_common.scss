@@ -1,0 +1,48 @@
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+.justify-space-between{
+  display: flex;
+  justify-content: space-between;
+}
+
+.justify-flex-end{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.justify-center{
+  display: flex;
+  justify-content: center;
+}
+
+.align-center{
+  display: flex;
+  align-items: center;
+}
+
+.show {
+  transition: opacity 400ms;
+  z-index: 1;
+  // display: flex;
+}
+.hide {
+  opacity: 0;
+  z-index: -1;
+  // display: none;
+}
+
+.top-and-bottom-borders{
+  border-top: 1px solid $primary-color;
+  border-bottom: 1px solid $primary-color;
+}
+
+.no-underline-link:hover{
+  text-decoration: none;
+}

@@ -3,7 +3,7 @@ layout: post
 title:  "Introduction to Networking in AWS"
 date:   2022-10-07 06:00:00 +0530
 categories: [insights, cloud]
-tags: ["AWS", "Networking"]
+tags: ["Cloud", "AWS"]
 ---
 
 Networking in AWS is quite different from networking in a private data center. You do not have to worry about managing hardware like switches, routers, or firewalls in AWS because everything is available as software. There are three main networking components in AWS.

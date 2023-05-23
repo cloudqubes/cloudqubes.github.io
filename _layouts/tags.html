@@ -2,25 +2,29 @@
 layout: default
 ---
 
-
-<h1 class="page-heading">Articles tagged with {{ page.tag-name }}</h1>
-
-<div class="home row">
-  <div class="col-sm-2"></div>
-  <div class="col-sm-8">
-    {%- if site.posts.size > 0 -%}
-      <ul class="post-list">
-        {%- for post in site.posts -%}
-          {% if post.tags contains page.tag-name %}
-            <li>
-              {% include article_list_item.html %}
-            </li>
-          {% endif %}
-        {%- endfor -%}
-      </ul>
-
-    {%- endif -%}
+<div class="header-row-2" >
+  <div class="header-row-container" >
+    <h2 class="tag-heading">Articles on {{ page.tag-name }}</h2>
   </div>
-  <div class="col-sm-2"></div>
+</div>
+
+<div class="header-row-2">
+  <div class="header-row-container">
+    <div>
+      
+      {%- if site.posts.size > 0 -%}
+        <ul class="post-list">
+          {%- for post in site.posts -%}
+            {% if post.tags contains page.tag-name %}
+              <li>
+                {% include article_list_item.html %}
+              </li>
+            {% endif %}
+          {%- endfor -%}
+        </ul>
+
+      {%- endif -%}
+    </div>
+  </div>
 
 </div>

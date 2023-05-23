@@ -3,7 +3,7 @@ layout: post
 title:  "The cloud-native telco transformation - Disaggregation is the key"
 date:   2022-09-17 06:00:00 +0530
 categories: [insights, telecom]
-tags: ["telecom", "cloud-native"]
+tags: ["Telecom"]
 ---
 
 

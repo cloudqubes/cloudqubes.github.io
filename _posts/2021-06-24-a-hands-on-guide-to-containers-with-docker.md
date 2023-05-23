@@ -3,7 +3,7 @@ layout: post
 title:  "A hands-on guide to containers with Docker"
 date:   2021-06-24 06:10:00 +0530
 categories: [handson, Containers]
-tags: [containers, docker]
+tags: [DevOps]
 ---
 
 [Docker] is a platform for software containerization. The [Docker] platform includes all the tools that you need to build and run containerized software applications. While there are several such container platforms, [Docker] is the pioneer of them all. So, let’s get some hands-on experience with [Docker].

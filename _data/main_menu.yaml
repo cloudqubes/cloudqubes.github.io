@@ -3,11 +3,17 @@ items:
   # - title: Blog
   #   url: /
 
-  - title: Articles
-    url: /
+  - title: Kubernetes
+    url: /tags/kubernetes
 
-  - title: Recipes
-    url: /recipes
+  - title: DevOps
+    url: /tags/devops
+
+  - title: Cloud
+    url: /tags/cloud
+
+  - title: Linux
+    url: /tags/linux
 
   # - title: About
   #   url: /about

@@ -1,4 +1,4 @@
 ---
 layout: tags
-tag-name: cloud
+tag-name: Cloud
 ---

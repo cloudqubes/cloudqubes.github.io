@@ -34,8 +34,8 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: $primary-color;
-  color: white;
+  // background-color: $primary-color;
+  // color: $cq-color-1;
 }
 
 .header-row-container{
@@ -54,9 +54,6 @@
 .brand{
   display: flex;
   align-items: center;
-  .logo{
-    padding-right: 1rem;
-  }
 }
 .menu-container{
   flex-grow: 2;
@@ -65,27 +62,64 @@
   justify-content: flex-start;
 }
 
+#subscribe-form{
+  box-sizing: border-box;
+  position: absolute;
+  background-color: $cq-color-1;
+  border: 1px solid $cq-color-1;
+  overflow: hidden;
+  // visibility: hidden;
+  // z-index: 1;
+  // height: 0;
+  // transition: height 1s, width 1s, padding 1s, visibility 1s, ease-in;
+}
+
+.subscribe-form-container{
+  width: 100%;
+}
+
+#subscribe-link{
+  font-family: 'Raleway', sans-serif;
+  color: #ffffff;
+  background-color: $primary-color;
+  padding: 1rem 2rem;
+  border-radius: .5rem;
+}
+
+#subscribe-link:hover{
+  text-decoration: none;
+  background-color: lighten($color: $primary-color, $amount: 4%)
+}
+
+#close-subscribe-form{
+  position: relative;
+  left: 0px;
+
+}
+
 nav.main-menu{
   display: flex;
-  align-items: center;
+  align-items: center;    
+  width: 100%;
   ul{
     margin: 0;
     list-style: none;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
     li{
       display: inline;
-      margin-right: 1rem;
+      // margin-right: 1rem;
       a{
         font-family: 'Titillium Web', sans-serif;
         padding: 0.1rem 1rem;
-        border: 1px solid whitesmoke;
-        border-radius: 5%;
-        color: white;
+        color: $primary-color;
         
       }
       a:hover{
         text-decoration: none;
-        color: $primary-color;
-        background-color: white;
+        color: #ffffff;
+        background-color: $primary-color;
       }
     }
   }
@@ -95,15 +129,15 @@ a.logo{
   margin-top: 10px;
   display: block;
   margin-left: auto;
-  margin-right: auto;
+  // margin-right: auto;
   width: 50%;
 }
 
 h1.main-heading{
   font-family: 'Titillium Web', sans-serif;
   font-size: 38px;
-  font-weight: 600;
-  color: white;
+  font-weight: 400;
+  color: $primary-color;
 }
 
 
