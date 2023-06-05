@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Getting Started with Ansible"
-date:   2020-04-14 06:30:00 +0530
+date:   2023-04-30 06:30:00 +0530
 categories: [hands-on, ansible]
 tags: [linux, ansible, automation]
 ---
@@ -40,6 +40,15 @@ $ mkdir ansible
 $ cd ansible
 $ cp /etc/ansible/ansible.cfg ./
 {% endhighlight %} 
+
+Alternatively, you can create a config file with the default settings using `ansible-config`.
+
+```shell
+$ ansible-config init --disabled > ansible.cfg
+```
+
+Since we are using the option `disabled`, all configuration directives in the new `ansible.cfg` will be commented. You can selectively uncomment and update to configure desired parameters.
+
 
 ## Host Inventory
 
@@ -128,6 +137,10 @@ Let's create a playbook to install NGINX on our reverse proxy server.
 {% endhighlight %} 
 
 This playbook uses the Ansible module `apt` to install the latest version of `NGINX`. You may recall we mentioned that a playbook should be considered as a desired end state and not a set of steps. Accordingly this playbook describes that latest version of NGINX should be installed. 
+
+## Running playbooks
+
+
 
 If we are to run this multiple times, NGINX would be downloaded and installed the first time only. In subsequent executions, the Ansible will check that NGINX is in its latest version and will do nothing. You can ascertain this by checking `/var/log/apt/history.log` which contains a history of `apt` activities.
 

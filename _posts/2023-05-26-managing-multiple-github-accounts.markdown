@@ -9,17 +9,18 @@ tags: [Linux]
 ---
 
 <div class="header-highlight">
-Using SSH key-based authentication and SSH config file, you can easily work with multiple GitHub accounts in the same computer.
+Using SSH key-based authentication and SSH config file, you can push code from multiple GitHub accounts in the same computer.
 </div>
 
-The HTTP authentication mechanism in GitHub is easy to get started. 
 
-But, does not allow you to push code from multiple user acounts from a single workstation.
+You have two GitHub accounts.
 
-You can easily overcome this problem using SSH key-based authentication. 
+You want to `git push` from each account to different GitHub repos.
 
+Unfortunately, that's not possible with the default HTTP authentication.
 
-Assume you have two GitHub accounts, one for personal use and other for work. Here's how to set up SSH key-based authentication for these two accounts.
+Here's a simple 4-step solution to set up SSH key-based authentication, and you push code from any number of GitHub accounts.
+
 
 ### #1 Create SSH keys
 
@@ -98,9 +99,9 @@ $ git commit -m "test commit"
 $ git branch -M main
 ```
 
-Next is the crucial step. 
+Here's the crucial step. 
 
-We must configure the URL of the repository referring the `Host` we configured in the SSH config file.
+We must configure the URL of the repository referring to the `Host` we configured in the SSH config file.
 
 The SSH URL of your repository is `git@github.com:yourname/personal_app.git`. Replace `git@github` with `github_personal` and configure the remote URL of the repository.
 
@@ -153,19 +154,28 @@ You can work with any number of GitHub accounts using this method.
 
 ### Updating an existing repository 
 
-The remote URL of the repository is configured in the `.git/config` file within the git repository. 
+For existing repositories, we can use this SSH authentication by changing the remote URL.
+
+The remote URL is configured in the `.git/config` file inside your repository. 
 
 ```shell
 [remote "origin"]
 	url = https://github.com/cloudqubes/number-crunch.git
-```
+...
+``` 
 
-Note that only a part of the file is ommited for brevity.
+Open this file in any existing local repository and update the URL according to the GitHub account you wish to use.
 
-Open this file in any existing local repository and update with the new URL to use personal or work account appropriately. Then, you can use the SSH authentication for any existing repository.
+Also, you may have to update the `name` and `email` fields in the same file.
+Then, the git client will use SSH authentication for this repository whenever you use `git push`.
 
-I have tested this method in Mac and Linux.
+## Wrapping up
 
-Windows 10 PowerShel supports SSH config file. The method should work in that as well.
+We have tested this method in Mac and Linux. Windows 10 PowerShel also supports SSH config file. So, it should work on Windows 10 as well.
 
+SSH key-based authentication is easier than the default HTTP authentication because you don't have to type in passwords everytime you use `git push`.
+
+So, give it a try.
+
+Leave a comment if you faced any issues.
 
