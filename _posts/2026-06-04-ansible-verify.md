@@ -35,7 +35,7 @@ The task prints the `success_msg` if all expressions are evaluated true. Else, `
 
 # Registering variables
 
-An Ansible task is an invocation of a certain module which returns a value. The `register` keyword stores this value in memory and makes it available for subsequent tasks .
+An Ansible task is an invocation of an Ansible module which returns a value. The `register` keyword stores this value in memory and makes it available for subsequent tasks .
 
 ```yaml
 - name: cat test_file
@@ -44,9 +44,9 @@ An Ansible task is an invocation of a certain module which returns a value. The 
   register: test_file
 ```
 
-This task stores the return value of `cmd` module in a variable named `test_file`. Any task that comes below this task in the play, can refer to the variable `test_file`.
+The `cat test_file` task stores the return value of `cmd` module in a variable named `test_file`. Any task that comes below this task in the play, can refer to the variable `test_file`.
 
-The return value of an Ansible module is a dictionary. You can examine this value using `debug module`.
+The return value of an Ansible module is a dictionary which you can inspect using the `debug` module.
 
 ```yaml
   - name: debug test_file
@@ -54,13 +54,15 @@ The return value of an Ansible module is a dictionary. You can examine this valu
       var: test_file
 ```
 
+This is the complete playbook which you can run to see this in action.
 
+You can use the values in the variable to build string expressions to be evaluated by `assert` module. 
 
 # Ignoring errors
 
 Ansible stops execution when a task fails. That's fine for configuring servers.
 
-But, when we are using Ansible for verifying configurations, we need to continue event if a task evaluates to false. 
+But, when we are using Ansible for verifying configurations, we need to continue even if a task evaluates to false. 
 So, we set `ignore errors` to true in the play.
 
 ```yaml
@@ -95,10 +97,16 @@ Then, we can use the variable `test_file` to check whether file exists.
     fail_msg: "NOK: test_file does not exists"
 ```
 
+Let's use the `debug` module to inspect the variable `test_file`
 
-The `stat` module actually returns a dictionary. 
+```yaml
+debug
+```
 
-The `stat` module retur. The `pw_name` gets the ownser username.
+The `stat` module returns a lot of information about a file.
+We'll show how to use two common parameters.
+
+The `pw_name` key holds the username of the owner.
 
 ```yaml
   - name: assert test_file owner username is ubuntu
@@ -109,7 +117,7 @@ The `stat` module retur. The `pw_name` gets the ownser username.
       fail_msg: "NOK: test_file owner is not ubuntu"
 ```
 
-`gr_name` get the group name of owner.
+The `gr_name` key holds the group name of owner.
 
 ```yaml
   - name: assert test_file owner group name is not root
@@ -174,8 +182,7 @@ $ ansible-playbook file-check.yml
 
 ### Check contents of a file
 
-To check the contens of the file we need to copy the contents to a variable.
-We use the Ansible module `command` to execute the `cat` command in the file.
+The Ansible module `command` can run shell commands.
 
 ```yaml
   - name: cat test_file
