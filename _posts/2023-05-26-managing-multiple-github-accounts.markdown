@@ -154,13 +154,14 @@ You can work with any number of GitHub accounts using this method.
 
 ### Updating an existing repository 
 
-For existing repositories, we can use this SSH authentication by changing the remote URL.
+For existing repositories, change the remote URL to use SSH authentication.
 
 The remote URL is configured in the `.git/config` file inside your repository. 
 
 ```shell
+...
 [remote "origin"]
-	url = https://github.com/cloudqubes/number-crunch.git
+	url = https://github.com/cloudqubes/your-work-name/work_app.git
 ...
 ``` 
 
@@ -168,6 +169,31 @@ Open this file in any existing local repository and update the URL according to 
 
 Also, you may have to update the `name` and `email` fields in the same file.
 Then, the git client will use SSH authentication for this repository whenever you use `git push`.
+
+Here's a sample config file for a a repository in your work account.
+
+```shell
+...
+[remote "origin"]
+	url = github_work:your-work-name/another_work_app.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[user]
+	email = your-work-name@workplace.com
+	name = your-work-name
+```
+
+## Cloning a repository
+
+When cloning an existing repository, change the URL to refer the `Host` in SSH config file.
+
+To clone repository `https://github.com/your-work-name/another_work_app.git` substitue `https://github.com/` with `github_work:` like this.
+
+```shell
+$ git clone github_work:your-work-name/another_work_app.git
+```
 
 ## Wrapping up
 
