@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "How to use Ansible for verifying configurations"
+title:  "How to use Ansible for verifying Linux server configurations"
 subtitle: > 
   You are already using Ansible for configuring Linux servers. Ansible can also verify configurations without actually changing anything.
-date:   2023-06-05 06:00:00 +0530
+date:   2023-06-06 06:00:00 +0530
 categories: [recipe]
 tags: [Linux]
 ---
@@ -14,11 +14,11 @@ You are already using Ansible for configuring Linux servers. Here's how you can 
 
 Ansible is a handy tool for managing configurations in Linux servers. 
 
-Sometimes, you want to verify configurations without actually changing. You can use Ansible module `ansible.builtin.assert`for this purpose.
+Sometimes, you want to verify configurations without actually changing. You can do that with Ansible `assert` module.
 
-Ansible module `ansible.builtin.assert` can evaluate string expressions. Coupled with Ansible variable assignment, you can develop Ansible playbooks to verify configurations.
+The `assert` module can evaluate string expressions. Coupled with Ansible variable assignment, you can write Ansible playbooks to check for specific parameters.
 
-# How to use assert module
+# How to use Ansible assert
 
 The `assert` module accepts three main parameters.
 
@@ -30,11 +30,11 @@ The `assert` module accepts three main parameters.
       success_msg: "Success message"
       fail_msg: "Fail message"
 ```
-The parameter `that` is a list of Jinja2 expressions to be evaluated. 
+The parameter `that` is a list of Jinja2 expressions. 
 
-The task prints the `success_msg` if all expressions are evaluated true. Else, `fail_msg` is printed.
+The task prints the `success_msg` if all the expressions are evaluated true or `fail_msg` if any expression is false.
 
-To build the Jinja2 expressions we can use variables.
+To build the Jinja2 expressions we can use Ansible variables.
 
 # Registering variables
 
@@ -47,7 +47,7 @@ An Ansible task is an invocation of an Ansible module which returns a value. The
   register: test_file
 ```
 
-The `cat test_file` task stores the return value of `cmd` module in a variable named `test_file`. Any task that comes below this task in the play, can refer to the variable `test_file`.
+The `cat test_file` task stores the return value of `cmd` module in the variable `test_file`. Any task that comes below this task in the play, can refer to the variable `test_file`.
 
 Let's inspect the variable using the `debug` module.
 
@@ -56,9 +56,9 @@ Let's inspect the variable using the `debug` module.
     ansible.builtin.debug:
       var: test_file
 ```
+The complete playbook `debug-test-file.yml` is available in [GitHub repository][assert-repo] for you to try. Clone the repo and follow the instructions to run the playbook.
 
-
-The output of the task.
+This is the output of the task.
 ```shell
 TASK [debug test_file] *****************************************************************************************************************************************************************************
 ok: [740-1-k8s1] => {
@@ -87,9 +87,7 @@ ok: [740-1-k8s1] => {
 
 ```
 
-The return value of an Ansible module is a dictionary with multiple key-value pairs. We can use these keys for building the expressions for `that` parameter in the `assert` module.
-
-You can find the complete playbook `debug-test-file.yml` in [GitHub repository][assert-repo] 
+The return value of an Ansible module is a dictionary with multiple key-value pairs. You can use these keys and valuse for building the expressions for `that` parameter in the `assert` module.
 
 # Ignoring errors
 
@@ -104,22 +102,26 @@ So, we set `ignore errors` to true in the play.
 
 # Usecases
 
-Let's see some usecases for verifying configurations with `ansible.builtin.assert`.
+Let's see some usecases for verifying configurations with Ansible `assert`.
 
 ## Check the existence of a file
 
-The module `stat` can retrieve status of files aand directories.
+<div class="article-note">
+Get the complete playbook here. @todo: include the link. 
+</div>
 
-This task retrieve the status of `test_file` in the users's home directory and store the result in the variable `test_file`.
+The module `stat` can retrieve status of files and directories.
+
+This task retrieves the status of `test_file` in the users's home directory.
 
 ```yaml
 - name: Get status of test_file
   ansible.builtin.stat:
     path: /home/ubuntu/test_file
-  register: test_file
+  register: test_file_1
 ```
 
-Inspect the contents of the `test_file`.
+Inspect the contents of the `test_file` variable using debug.
 
 ```yaml
   - name: debug test_file_1
@@ -127,7 +129,7 @@ Inspect the contents of the `test_file`.
       var: test_file_1
 ```
 
-Tast output.
+Task output.
 ```shell
 TASK [debug test_file_1] ***************************************************************************************************************************************************************************
 ok: [740-1-k8s1] => {
@@ -186,10 +188,9 @@ ok: [740-1-k8s1] => {
 }
 ```
 
-The `stat` module returns many parameters. Some are self explanatory. Refer the [Stat module docs][stat-docs] for interpretation of the rest of the parameters.
+The `stat` module returns a range of key-value parameters. Some are self explanatory. Refer the [Stat module docs][stat-docs] for interpretation of the others.
 
-Let's see how to use the `exists` key to check if a file exists.
-
+You can use the `exists` key to check if the file exists.
 
 ```yaml
 - name: assert test_file exists
@@ -222,16 +223,13 @@ The `gr_name` key holds the group name of owner.
       fail_msg: "NOK: test_file owner group is root"
 ```
 
-The complete playbook `file-check.yml` is available in the GitHub repo.
-Clone the repo and run the playbook to see the output.
-
-```shell
-$ ansible-playbook file-check.yml
-```
-
 ### Check contents of a file
 
-The Ansible module `command` can run shell commands.
+<div class="article-note">
+Get the complete playbook here. @todo: include the link. 
+</div>
+
+The Ansible module `command` can run Linux commands.
 Let's run `cat` command with the `test_file` and inpect the contents.
 
 ```yaml
@@ -270,8 +268,8 @@ ok: [740-1-k8s1] => {
 
 ```
 
-
-The `test_file.stdout` contains output of the command which we can examine to check the contents of the file.
+The `test_file.stdout` contains the output of the `cat` command.
+ which we can examine to check the contents of the file.
 
 ```yaml
   - name: assert line in file
@@ -308,8 +306,8 @@ Check whether `apparmor` service is running.
       fail_msg: "NOK: apparmor is not running"
 ```
 
-Some service names hava a dot notation such as `ssh.service.
-For accessing such keys we need to use the square brackets.
+Some service names hava a dot notation such as `ssh.service`.
+For accessing such keys use the Python array notations - single quoted key within square brackets.
 
 ```yaml
   - name: assert ssh.service is running
@@ -322,6 +320,35 @@ For accessing such keys we need to use the square brackets.
 
 ### Check the status of a kernel module
 
+Ansible does not have a module for checking status of Linux kernel modules. But, we can use the `command` module to get output of `lsmod` and analyze.
+
+```yaml
+  - name: List loaded kernel modules
+    ansible.builtin.command:
+      cmd: "lsmod"
+    register: loaded_modules
+```
+Checking the `ip_tables` module status.
+
+```yaml
+  - name: Check iptables is loaded
+    ansible.builtin.assert:
+      that:
+      - "'ip_tables' in loaded_modules.stdout" 
+      success_msg: "OK: ip_tables is loaded"
+      fail_msg: "NOK: ip_tables is not loaded"
+```
+
+The `command` module does not use the Linux shell to execute commands. So, $ notations are not interpreted.
+
+The Ansible module `shell` executes commands in the Linux shell, so suppor these advanced commands.
+
+```yaml
+  - name: List all kernel modules
+    ansible.builtin.shell:
+      cmd: "find /lib/modules/$(uname -r) -name '*.ko*'"
+    register: all_modules
+```
 
 This is handy for checking security compliances.
 
