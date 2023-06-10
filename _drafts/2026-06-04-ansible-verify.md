@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "How to use Ansible for verifying Linux server configurations"
+title:  "How to use Ansible for verifying configurations"
 subtitle: > 
-  You are already using Ansible for configuring Linux servers. Ansible can also verify configurations without actually changing anything.
+  Ansible is a well-known configuration management tool. You can also use Ansible to verify configurations.
 date:   2023-06-06 06:00:00 +0530
 categories: [recipe]
 tags: [Linux]
@@ -12,11 +12,11 @@ tags: [Linux]
 You are already using Ansible for configuring Linux servers. Here's how you can use Ansible for verifing configurations.
 </div>
 
-Ansible is a handy tool for managing configurations in Linux servers. 
+Ansible is a handy tool for configuration management.
 
 Sometimes, you want to verify configurations without actually changing. You can do that with Ansible `assert` module.
 
-The `assert` module can evaluate string expressions. Coupled with Ansible variable assignment, you can write Ansible playbooks to check for specific parameters.
+The `assert` module can evaluate Jinja2 expressions. Coupled with Ansible variable assignment, you can write Ansible playbooks to check for specific configuration parameters.
 
 # How to use Ansible assert
 
@@ -38,63 +38,64 @@ To build the Jinja2 expressions we can use Ansible variables.
 
 # Registering variables
 
-An Ansible task is an invocation of an Ansible module which returns a value. The `register` keyword stores this value in memory and makes it available for subsequent tasks .
+An Ansible task is an invocation of an Ansible module which returns a value. The `register` keyword stores this value in memory and makes it available for subsequent tasks.
 
 ```yaml
-- name: cat test_file
+- name: list files
   ansible.builtin.command:
-    cmd: cat /home/ubuntu/test_file
-  register: test_file
+    cmd: ls -k /home/ubuntu
+  register: cmd_ls
 ```
 
-The `cat test_file` task stores the return value of `cmd` module in the variable `test_file`. Any task that comes below this task in the play, can refer to the variable `test_file`.
+The `list files` task invokes the module `cmd` which executes Linux commands. The task stores the return value in the variable `cmd_ls`. Any task that comes below this task in the play, can refer to the variable `cmd_ls`.
 
 Let's inspect the variable using the `debug` module.
 
 ```yaml
-  - name: debug test_file
-    ansible.builtin.debug:
-      var: test_file
+- name: debug cmd_ls
+  ansible.builtin.debug:
+    var: cmd_ls
 ```
-The complete playbook `debug-test-file.yml` is available in [GitHub repository][assert-repo] for you to try. Clone the repo and follow the instructions to run the playbook.
+The complete playbook `variable-test.yml` is available in [ansible_assert] GitHub repository. Clone the repo and follow the instructions to run the playbook.
 
-This is the output of the task.
+The debug task prints the contents of the variable `cmd_ls`.
 ```shell
-TASK [debug test_file] *****************************************************************************************************************************************************************************
+TASK [debug cmd_ls] ********************************************************************************************************************************************************************************
 ok: [740-1-k8s1] => {
-    "test_file": {
+    "cmd_ls": {
         "changed": true,
         "cmd": [
-            "cat",
-            "/home/ubuntu/test_file"
+            "ls",
+            "-k",
+            "/home/ubuntu"
         ],
-        "delta": "0:00:00.004001",
-        "end": "2023-06-06 06:58:39.177322",
+        "delta": "0:00:00.005862",
+        "end": "2023-06-10 15:00:20.355971",
         "failed": false,
         "msg": "",
         "rc": 0,
-        "start": "2023-06-06 06:58:39.173321",
+        "start": "2023-06-10 15:00:20.350109",
         "stderr": "",
         "stderr_lines": [],
-        "stdout": "test_string\nnew string\nThis string is in fil",
+        "stdout": "my_file\ntest_file",
         "stdout_lines": [
-            "test_string",
-            "new string",
-            "This string is in file"
+            "my_file",
+            "test_file"
         ]
     }
 }
-
 ```
 
-The return value of an Ansible module is a dictionary with multiple key-value pairs. You can use these keys and valuse for building the expressions for `that` parameter in the `assert` module.
+As you can see from this output, the return value of the `cmd` module is a Python dictionary.
+
+Most Ansible modules return a similar data structure. You can use the keys and valuse in this data structure for building the Jinja2 expressions for `that` parameter in the `assert` module.
 
 # Ignoring errors
 
 Ansible stops execution when a task fails. That's fine for configuring servers.
 
 But, when we are using Ansible for verifying configurations, we need to continue even if a task evaluates to false. 
-So, we set `ignore errors` to true in the play.
+So, when using Ansible for configuration verification set `ignore errors` to true in the playbook.
 
 ```yaml
   ignore_errors: true
@@ -106,13 +107,9 @@ Let's see some usecases for verifying configurations with Ansible `assert`.
 
 ## Check the existence of a file
 
-<div class="article-note">
-Get the complete playbook here. @todo: include the link. 
-</div>
-
 The module `stat` can retrieve status of files and directories.
 
-This task retrieves the status of `test_file` in the users's home directory.
+This task retrieves the status of `test_file` in the user's home directory.
 
 ```yaml
 - name: Get status of test_file
@@ -121,7 +118,7 @@ This task retrieves the status of `test_file` in the users's home directory.
   register: test_file_1
 ```
 
-Inspect the contents of the `test_file` variable using debug.
+Inspect the contents of the `test_file_1` variable with debug.
 
 ```yaml
   - name: debug test_file_1
@@ -188,9 +185,11 @@ ok: [740-1-k8s1] => {
 }
 ```
 
-The `stat` module returns a range of key-value parameters. Some are self explanatory. Refer the [Stat module docs][stat-docs] for interpretation of the others.
+The `stat` module returns a range of key-value pairs that represent multiple parameters about the file. Some keys are self explanatory. Refer the [Stat module docs][stat-docs] for interpretation of the others.
 
-You can use the `exists` key to check if the file exists.
+Here are three usefule keys and how to use them in Jinja2 expressions in `assert` module.
+
+The `exists` key is a boolean representation of the existence of the file.
 
 ```yaml
 - name: assert test_file exists
@@ -201,7 +200,7 @@ You can use the `exists` key to check if the file exists.
     fail_msg: "NOK: test_file does not exists"
 ```
 
-The `pw_name` key holds the username of the owner.
+The `pw_name` key holds the username of the owner. We shall check wither the value equals `ubuntu`.
 
 ```yaml
   - name: assert test_file owner username is ubuntu
@@ -212,7 +211,7 @@ The `pw_name` key holds the username of the owner.
       fail_msg: "NOK: test_file owner is not ubuntu"
 ```
 
-The `gr_name` key holds the group name of owner.
+The `gr_name` key holds the group name of owner and we are checking whether the owner belongs to `root`.
 
 ```yaml
   - name: assert test_file owner group name is not root
@@ -222,6 +221,8 @@ The `gr_name` key holds the group name of owner.
       success_msg: "OK: test_file owner group is not root"
       fail_msg: "NOK: test_file owner group is root"
 ```
+
+Create the file `/home/ubuntu/test_file` and run the playbook  `file-check.yml` in the [ansible_assert] to see the output.
 
 ### Check contents of a file
 
@@ -353,5 +354,5 @@ The Ansible module `shell` executes commands in the Linux shell, so suppor these
 This is handy for checking security compliances.
 
 
-[assert-repo]: https://github.com/cloudqubes/ansible_assert
+[ansible_assert]: https://github.com/cloudqubes/ansible_assert
 [stat-docs]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/stat_module.html
