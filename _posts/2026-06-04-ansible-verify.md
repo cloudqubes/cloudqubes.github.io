@@ -3,7 +3,7 @@ layout: post
 title:  "How to use Ansible for verifying configurations"
 subtitle: > 
   Ansible is a well-known configuration management tool. You can use Ansible for verifying configurations too.
-date:   2023-06-06 06:00:00 +0530
+date:   2023-06-11 05:50:00 +0530
 categories: [recipe]
 tags: [Linux]
 ---
