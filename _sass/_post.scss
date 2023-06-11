@@ -51,6 +51,7 @@ article.post{
         font-size: 20px;
         font-weight: 600;
         color: $text-color;
+        padding-top: .5rem;
     }  
 
     h3{
@@ -105,7 +106,7 @@ pre.highlight{
   border: 1px solid #d7d7d7;
   border-left: .5rem solid #3580d5;
   padding: .1rem .5rem;
-  margin-bottom: .5rem;
+  margin-bottom: 1rem;
 }
 
 .header-highlight{

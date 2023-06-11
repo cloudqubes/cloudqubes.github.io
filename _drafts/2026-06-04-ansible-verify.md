@@ -2,7 +2,7 @@
 layout: post
 title:  "How to use Ansible for verifying configurations"
 subtitle: > 
-  Ansible is a well-known configuration management tool. You can also use Ansible to verify configurations.
+  Ansible is a well-known configuration management tool. You can use Ansible for verifying configurations too.
 date:   2023-06-06 06:00:00 +0530
 categories: [recipe]
 tags: [Linux]
@@ -47,7 +47,7 @@ An Ansible task is an invocation of an Ansible module which returns a value. The
   register: cmd_ls
 ```
 
-The `list files` task invokes the module `cmd` which executes Linux commands. The task stores the return value in the variable `cmd_ls`. Any task that comes below this task in the play, can refer to the variable `cmd_ls`.
+The `list files` task invokes the module `cmd` which executes the Linux command `ls -k /home/ubuntu`. The task stores the return value in the variable `cmd_ls`. Any task that comes below this task in the play, can refer the variable `cmd_ls`.
 
 Let's inspect the variable using the `debug` module.
 
@@ -56,9 +56,8 @@ Let's inspect the variable using the `debug` module.
   ansible.builtin.debug:
     var: cmd_ls
 ```
-The complete playbook `variable-test.yml` is available in [ansible_assert] GitHub repository. Clone the repo and follow the instructions to run the playbook.
+The complete playbook `variable-test.yml` is available in [ansible_assert] GitHub repository. Clone the repo and run the playbook to check the output.
 
-The debug task prints the contents of the variable `cmd_ls`.
 ```shell
 TASK [debug cmd_ls] ********************************************************************************************************************************************************************************
 ok: [740-1-k8s1] => {
@@ -90,16 +89,7 @@ As you can see from this output, the return value of the `cmd` module is a Pytho
 
 Most Ansible modules return a similar data structure. You can use the keys and valuse in this data structure for building the Jinja2 expressions for `that` parameter in the `assert` module.
 
-# Ignoring errors
 
-Ansible stops execution when a task fails. That's fine for configuring servers.
-
-But, when we are using Ansible for verifying configurations, we need to continue even if a task evaluates to false. 
-So, when using Ansible for configuration verification set `ignore errors` to true in the playbook.
-
-```yaml
-  ignore_errors: true
-```
 
 # Usecases
 
@@ -200,7 +190,7 @@ The `exists` key is a boolean representation of the existence of the file.
     fail_msg: "NOK: test_file does not exists"
 ```
 
-The `pw_name` key holds the username of the owner. We shall check wither the value equals `ubuntu`.
+The `pw_name` key holds the username of the owner. We will check whether the value equals `ubuntu`.
 
 ```yaml
   - name: assert test_file owner username is ubuntu
@@ -211,7 +201,7 @@ The `pw_name` key holds the username of the owner. We shall check wither the val
       fail_msg: "NOK: test_file owner is not ubuntu"
 ```
 
-The `gr_name` key holds the group name of owner and we are checking whether the owner belongs to `root`.
+The `gr_name` key holds the group name of owner and here's how we check whether the owner does not belong to the `root` user group.
 
 ```yaml
   - name: assert test_file owner group name is not root
@@ -222,13 +212,9 @@ The `gr_name` key holds the group name of owner and we are checking whether the 
       fail_msg: "NOK: test_file owner group is root"
 ```
 
-Create the file `/home/ubuntu/test_file` and run the playbook  `file-check.yml` in the [ansible_assert] to see the output.
+Create the file `/home/ubuntu/test_file` and run the playbook `file-check.yml` in the [ansible_assert] to see the output.
 
-### Check contents of a file
-
-<div class="article-note">
-Get the complete playbook here. @todo: include the link. 
-</div>
+## Check the contents of a file
 
 The Ansible module `command` can run Linux commands.
 Let's run `cat` command with the `test_file` and inpect the contents.
@@ -270,7 +256,7 @@ ok: [740-1-k8s1] => {
 ```
 
 The `test_file.stdout` contains the output of the `cat` command.
- which we can examine to check the contents of the file.
+We can use it in Jinja2 expressions to check the contents of the file.
 
 ```yaml
   - name: assert line in file
@@ -288,14 +274,59 @@ The `test_file.stdout` contains the output of the `cat` command.
       fail_msg: "NOK: String is in file
 ```
 
-### Check the status of a service
+Refer `file-content-check.yml` in the [ansible_assert] for the complete playbook. 
 
-The module `ansible.builtin.service_facts` can rerieve information related to services ans store them in `ansible_facts.services` variable.
+## Check the status of a service
+
+The module `ansible.builtin.service_facts` can rerieve information related to services and store them in `ansible_facts.services` variable.
 
 ```yaml
   - name: Populate service facts
     ansible.builtin.service_facts:
 ```
+
+Let's print the `ansible_facts.services` to see what it contains.
+
+```yaml
+- name: Print service facts
+  ansible.builtin.debug:
+    var: ansible_facts.services
+```
+
+We get a list of the services installed in the target system.
+
+Note that a part of the output is omitted for brevity.
+
+```shell
+TASK [Print service facts] *************************************************************************************************************************************************************************
+ok: [740-1-k8s1] => {
+    "ansible_facts.services": {
+        "ModemManager.service": {
+            "name": "ModemManager.service",
+            "source": "systemd",
+            "state": "running",
+            "status": "enabled"
+        },
+        "NetworkManager.service": {
+            "name": "NetworkManager.service",
+            "source": "systemd",
+            "state": "stopped",
+            "status": "not-found"
+        },
+        "accounts-daemon.service": {
+            "name": "accounts-daemon.service",
+            "source": "systemd",
+            "state": "running",
+            "status": "enabled"
+        },
+        "apparmor": {
+            "name": "apparmor",
+            "source": "sysv",
+            "state": "running"
+        },
+...
+```
+
 
 Check whether `apparmor` service is running.
 ```yaml
@@ -319,6 +350,8 @@ For accessing such keys use the Python array notations - single quoted key withi
       fail_msg: "NOK: ssh.service is not running"
 ```
 
+Run the playbook `service-check.yml` in the [ansible_assert] to see the output.
+
 ### Check the status of a kernel module
 
 Ansible does not have a module for checking status of Linux kernel modules. But, we can use the `command` module to get output of `lsmod` and analyze.
@@ -340,9 +373,8 @@ Checking the `ip_tables` module status.
       fail_msg: "NOK: ip_tables is not loaded"
 ```
 
-The `command` module does not use the Linux shell to execute commands. So, $ notations are not interpreted.
-
-The Ansible module `shell` executes commands in the Linux shell, so suppor these advanced commands.
+The `command` module does not use the Linux shell to execute commands. So, it cannot interpret `$` notations.
+To run commands with such notations, use the `shell` module.
 
 ```yaml
   - name: List all kernel modules
@@ -350,8 +382,23 @@ The Ansible module `shell` executes commands in the Linux shell, so suppor these
       cmd: "find /lib/modules/$(uname -r) -name '*.ko*'"
     register: all_modules
 ```
+Run the playbook `kernel-module-check.yml` in the [ansible_assert] to see the output.
 
-This is handy for checking security compliances.
+### Ignoring errors
+
+Ansible stops execution when a task fails. That's fine for configuring servers.
+
+But, when we are using Ansible for verifying configurations, we need to continue even if a task evaluates to false. 
+So, when using Ansible for configuration verification set `ignore errors` to true in the playbook.
+
+```yaml
+  ignore_errors: true
+```
+### Ansible can do many things
+
+Ansible can do things other than configuring servers. We just used Ansible for verifying configurations. These configuration verification capabilities in Ansible are handy for automating security compliance checking and audits.
+
+In future posts, let's explore more usecases of Ansible.
 
 
 [ansible_assert]: https://github.com/cloudqubes/ansible_assert
