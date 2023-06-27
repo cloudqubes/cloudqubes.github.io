@@ -2,7 +2,7 @@
 layout: post
 title:  "Building Blocks of The Cloud Telco"
 date:   2019-11-04 19:00:00 +0530
-categories: insights NFV cloud telco
+categories: Telecom
 ---
 
 **We are standing at the brink of a transformation in telcos. The telecommunication networks are undergoing a massive shift with virtualization, but your transformation journey should have a bigger goal - build a Cloud Telco.**

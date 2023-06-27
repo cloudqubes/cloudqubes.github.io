@@ -3,7 +3,7 @@ layout: post
 title:  "Introduction to cloud-init"
 date:   2020-09-23 04:20:00 +0530
 categories: [handson, OpenStack]
-tags: [automation, cloud-init, NFV, OpenStack]
+tags: [OpenStack]
 ---
 
 Cloud OS images from [Ubuntu], [Fedora], [Centos] and most other Linux distributions have their password authentication disabled by default. So, every time when creating a VM instance on OpenStack with a Heat template, I have been using `user_data` directive to set the default password, without really understanding what's going on inside. 

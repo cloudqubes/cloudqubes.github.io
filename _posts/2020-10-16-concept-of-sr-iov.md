@@ -3,7 +3,7 @@ layout: post
 title:  "Introduction to the concept of SR-IOV"
 date:   2020-10-20 05:10:00 +0530
 categories: [handson, OpenStack]
-tags: [automation, cloud-init, NFV, OpenStack]
+tags: [OpenStack]
 ---
 
 Virtualization enables sharing of physical resources in a host compute, with multiple virtual machines. The 

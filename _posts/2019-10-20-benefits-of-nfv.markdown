@@ -2,7 +2,7 @@
 layout: post
 title:  "Benefits of NFV"
 date:   2019-10-20 19:30:00 +0530
-categories: NFV cloud telco
+categories: Telecom
 ---
 NFV, currently in its 3rd release as of 2018 is at the center of attraction of telecom operators all over the world. While some telcos are still cautiously observing this, the high-tech front-runners have already moved a long way on their transformation journeys.
 

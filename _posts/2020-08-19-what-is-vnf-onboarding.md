@@ -3,7 +3,7 @@ layout: post
 title:  "What is VNF Onboarding"
 date:   2020-08-18 06:20:00 +0530
 categories: [insights, NFV]
-tags: [VNF, onboarding, heat, VNFM, SVNFM, NFVO]
+tags: [Telecom]
 ---
 
 You are underway on full throttle on the virtualization journey. You have an NFV Platform, complete with SDN and orchestration, and have already onboarded VNFs from multiple suppliers. The project is really gaining traction. But, wait a moment. Have you really onboarded those VNFs?

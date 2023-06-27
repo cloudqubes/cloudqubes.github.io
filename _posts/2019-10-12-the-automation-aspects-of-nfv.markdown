@@ -2,7 +2,7 @@
 layout: post
 title:  "The Automation Aspects of NFV"
 date:   2019-10-12 06:24:00 +0530
-categories: insights nfv automation
+categories: Telecom
 ---
 
 **The legacy telecom network with its physical network functions, has limited capabilities of automation. It demands a lot of manual work and hinders the development of agile practices.**

@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  "Docker CLI cheatsheet"
+title:  "Docker CLI quick reference"
 subtitle: > 
   A quick reference of commonly used docker commands.
-cover-image: "nas.png"
+cover-image: "docker-cli.png"
 date:   2023-06-23 15:10:00 +0530
 categories: [hands-on]
-tags: [Kubernetes]
+tags: [Linux]
 ---
 
 <div class="header-highlight">
@@ -16,6 +16,8 @@ A quick reference of commonly used docker commands.
 # The top five
 
 ### Pull container image 
+
+{% include code_header.html %}
 ```shell
 docker pull <image-name>:latest
 ```

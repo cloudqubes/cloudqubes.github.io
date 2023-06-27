@@ -3,7 +3,7 @@ layout: post
 title:  "Create user with no password prompt for sudo"
 date:   2020-04-13 06:20:00 +0530
 categories: [bash]
-tags: [devstack, proxy, Linux, openstack, sub]
+tags: [Linux]
 my_categories: [sub]
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title:  "What went wrong with NFV?"
 date:   2022-04-20 06:00:00 +0530
 categories: [insights, telecom]
-tags: ["telco transformation", "NFV"]
+tags: [Telecom]
 ---
 
 The advent of NFV in 2012 created hype in the telecom industry as it promised to revolutionize the network architecture. A decade after, most of its promises are still unfulfilled. So, what really went wrong?

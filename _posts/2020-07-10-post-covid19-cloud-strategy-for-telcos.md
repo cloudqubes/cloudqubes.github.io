@@ -3,7 +3,7 @@ layout: post
 title:  "Post COVID-19 Telco Cloud Strategy"
 date:   2020-07-20 03:30:00 +0530
 categories: [insights, NFV]
-tags: [nfv, covid-19, strategy, cloud]
+tags: [Telecom]
 ---
 
 The world is still recovering from the impact of the COVID-19 pandemic. While some countries have successfully curbed the threat, a complete eradication of coronavirus is not yet in sight. Worse still, anytime a second wave of the pandemic could hit more devastatingly, so it would be a massive understatement to say that danger is over.

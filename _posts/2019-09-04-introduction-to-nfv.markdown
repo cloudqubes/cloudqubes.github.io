@@ -2,7 +2,7 @@
 layout: post
 title:  "Introduction to NFV"
 date:   2019-09-04 18:30:00 +0530
-categories: insights NFV telco cloud
+categories: [Telecom]
 ---
 
 Network Function Virtualization is not just a magazine headline today. From its beginning in 2012, NFV has rapidly evolved through multiple standard revisions, PoCs, field trials and has entered large scale deployments in some tier-1 telecom service providers.

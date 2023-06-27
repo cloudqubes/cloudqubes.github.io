@@ -3,7 +3,7 @@ layout: post
 title:  "Architectural options for VNF onboarding"
 date:   2020-08-13 06:20:00 +0530
 categories: [insights, openstack]
-tags: [VNF, onboarding, heat, GVNFM, SVNFM, NFVO]
+tags: [Telecom]
 ---
 
 Onboarding is the process of getting a VNF up and running on NFV infrastructure. The process of onboarding consists of three phases; design, modeling and deployment. 

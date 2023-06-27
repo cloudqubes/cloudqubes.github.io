@@ -2,7 +2,7 @@
 layout: post
 title:  "Functions of NFVO"
 date:   2019-11-18 04:00:00 +0530
-categories: insights NFV NFVO
+categories: Telecom
 ---
 
 **NFVO is a key component in the NFV ecosystem. It provides a unified interface for managing virtual resources across multiple data centers, and acts as the single point of integration for external applications.**

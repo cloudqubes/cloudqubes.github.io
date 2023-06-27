@@ -3,7 +3,7 @@ layout: post
 title:  "Getting Started with Ansible"
 date:   2023-04-30 06:30:00 +0530
 categories: [hands-on, ansible]
-tags: [linux, ansible, automation]
+tags: [Linux]
 ---
 
 **Ansible is a popular tool among IT and network admins. With NFV and digital transformation, it's going to be useful for the Telcos as well.**

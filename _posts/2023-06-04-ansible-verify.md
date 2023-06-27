@@ -2,14 +2,14 @@
 layout: post
 title:  "How to use Ansible for verifying configurations"
 subtitle: > 
-  Ansible is a well-known configuration management tool. You can use Ansible for verifying configurations too.
+  You are already using Ansible for configuring Linux servers. Here's how to use Ansible for verifing configurations.
 date:   2023-06-11 05:50:00 +0530
 categories: [recipe]
 tags: [Linux]
 ---
 
 <div class="header-highlight">
-You are already using Ansible for configuring Linux servers. Here's how you can use Ansible for verifing configurations.
+You are already using Ansible for configuring Linux servers. Here's how to use Ansible for verifing configurations.
 </div>
 
 Ansible is a handy tool for configuration management.

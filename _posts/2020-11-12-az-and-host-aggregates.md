@@ -3,7 +3,7 @@ layout: post
 title:  "All about Availability Zones and Host Aggregates"
 date:   2020-11-12 05:10:00 +0530
 categories: [handson, OpenStack]
-tags: [OpenStack, avaialbility zone, host aggregate]
+tags: [OpenStack]
 ---
 
 

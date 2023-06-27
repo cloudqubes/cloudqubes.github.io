@@ -3,7 +3,7 @@ layout: post
 title:  "Cinder with Heat"
 date:   2020-08-05 18:20:00 +0530
 categories: [hands-on, openstack]
-tags: [cinder, block-storage, openstack, persistant, heat]
+tags: [OpenStack]
 ---
 
 [Nova] adapts ephemeral storage for VMs by default. The ephemeral storage resides on the local hard disks of the host computes and present a virtual disk for each VM. These virtual disks are created at the time of the VM creation, and are deleted with the VM, so are called ephemeral. If the host machine crashes, you lose the VM with all its data stored in disk.
