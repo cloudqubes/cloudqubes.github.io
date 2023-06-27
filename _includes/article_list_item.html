@@ -14,6 +14,9 @@
 </span>
 <span class="post-meta">{{ post.date | date: date_format }}</span>
 <span>- {{read_minutes}} Min read</span>
+{% if post.cover-image %}
+  <img src="{{ site.baseurl | append: "/assets/images/" | append: post.cover-image  }}" class="post-thumbnail" alt="Cover image">
+{% endif %}
 <h3>
   <a class="post-link" href="{{ post.url | relative_url }}">
     {{ post.title | escape }}

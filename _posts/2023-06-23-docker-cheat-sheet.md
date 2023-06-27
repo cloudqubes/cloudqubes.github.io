@@ -3,6 +3,7 @@ layout: post
 title:  "Docker CLI cheatsheet"
 subtitle: > 
   A quick reference of commonly used docker commands.
+cover-image: "nas.png"
 date:   2023-06-23 15:10:00 +0530
 categories: [hands-on]
 tags: [Kubernetes]

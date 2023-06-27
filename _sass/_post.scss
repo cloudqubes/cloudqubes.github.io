@@ -17,7 +17,12 @@ ul.post-list{
   list-style-type: none;
   padding-top: 20px;
   padding-left: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   li{
+    flex-basis: 30%;
+
     padding-bottom: 30px;
   }
 }
@@ -162,4 +167,8 @@ pre.highlight{
 li{
   font-family: 'Titillium Web', sans-serif;
   font-size: 1.1rem;
+}
+
+.post-thumbnail{
+  width: 100%;
 }
