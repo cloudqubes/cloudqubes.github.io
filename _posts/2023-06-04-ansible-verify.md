@@ -21,15 +21,15 @@ The `assert` module can evaluate Jinja2 expressions. Coupled with Ansible variab
 # How to use Ansible assert
 
 The `assert` module accepts three main parameters.
-{% include code_header.html %}
 ```yaml
   - name: task name
     ansible.builtin.assert:
       that: 
       - "condition"
       success_msg: "Success message"
-      fail_msg: "Fail message"
+      fail_msg: "Fail message" 
 ```
+
 The parameter `that` is a list of Jinja2 expressions. 
 
 The task prints the `success_msg` if all the expressions are evaluated true or `fail_msg` if any expression is false.

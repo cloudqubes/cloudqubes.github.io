@@ -17,7 +17,6 @@ A quick reference of commonly used docker commands.
 
 ### Pull container image 
 
-{% include code_header.html %}
 ```shell
 docker pull <image-name>:latest
 ```
