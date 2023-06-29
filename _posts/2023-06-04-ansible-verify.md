@@ -21,7 +21,7 @@ The `assert` module can evaluate Jinja2 expressions. Coupled with Ansible variab
 # How to use Ansible assert
 
 The `assert` module accepts three main parameters.
-
+{% include code_header.html %}
 ```yaml
   - name: task name
     ansible.builtin.assert:
