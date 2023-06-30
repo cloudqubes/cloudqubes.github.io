@@ -17,9 +17,9 @@
     <span class="post-meta">{{ post.date | date: date_format }}</span>
     <span class="post-meta">- {{read_minutes}} Min read</span>    
   </div>
-  {% if post.cover-image %}
+  {% if post.image %}
     <a href="{{ post.url | relative_url }}">
-      <img src="{{ site.baseurl | append: "/assets/images/" | append: post.cover-image  }}" class="post-thumbnail" alt="Cover image">
+      <img src="{{ site.baseurl | append: "/assets/images/" | append: post.image  }}" class="post-thumbnail" alt="Cover image">
     </a>
   {% endif %}
   <h3>
@@ -29,11 +29,16 @@
   </h3>
   {%- if site.show_excerpts -%}
     <!-- {{ post.content | strip_html | truncatewords: 50 }} -->
-    {% if post.subtitle %}
+    <!-- post.description added to support the Jekyll-seo-tag -->
+    {% if post.description %}
+      <div class="subtitle">
+        {{ post.description }}                    
+      </div>
+    {% elsif post.subtitle %}  
       <div class="subtitle">
         {{ post.subtitle }}                    
       </div>
-    {% else %}  
+    {% else %}
       {{ post.excerpt }}
     {% endif %}
   {%- endif -%}
