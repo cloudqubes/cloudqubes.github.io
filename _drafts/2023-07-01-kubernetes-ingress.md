@@ -1,3 +1,17 @@
+---
+layout: post
+title:  "What is Kubernetes Ingress"
+description: > 
+  The purpose of Kubernetes Ingress and how to use it.
+image: "docker-cli.png"
+date:   2023-06-23 15:10:00 +0530
+categories: [hands-on]
+tags: [Kubernetes]
+---
+
+<div class="header-highlight">
+The purpose of Kubernetes Ingress and how to use it to expose HTTP workloads.
+</div>
 
 We discussed about Kubernetes networking and how to expose an application running inside Kubernetes. 
 There's another method that we can expose a Service to external world - Kubernetes Ingress.
@@ -15,9 +29,18 @@ An ingress is in  Layer-7. It can handle URL or subdomain based routing. All tra
 A rule of thumb is if your application uses HTTP or HTTPS only, use ingress. Otherwise go for a loadbalancer service.
 
 # Ingress and Ingress Controller
-Kubernetes Ingress is an API object in Kubernetes. It stores a certain set of parameters regarding how traffic should be routes to services.
 
-The ingress controller is a piece of software that runs in one or more Pods withing the kubernetes cluster. Ithe Ingress Controller implement the kogic defined in the Ingress Object and takes care of routing te traffic to destined services.
+Kubernetes Ingress is an API object in Kubernetes. Kubernetes stores its API objects in the `etcd` data store.
+
+<div class="inline-highlight">
+An Ingress object defines a set of rules for routing HTTP(S) traffic to Kubernetes Service(s).
+</div>
+An Ingress object defines how HTTP or HTTPS traffic must be routed to one or more Kubernetes Services.
+
+The `Ingress Controller` is a piece of software that runs in one or more Pods inside the kubernetes cluster. The ingress controller implements the rules defined in the Ingress object and takes care of routing the traffic to destined Kubernetes Services.
+
+![Ingress and Ingress Controller](/assets/images/k8s-ingress-api-object.png){: width="100%" }
+*Ingress and Ingress Controller*
 
 # Ingress controller implementations
 There are several implementations of ingress controller, commercial or open-source, managed or self-managed.

@@ -68,6 +68,14 @@ docker buildx build --platform linux/amd64 .
 ```
 The `Dockerfile` must exist in the path from where you are running this command.
 
+Check Buildx availability in your Docker CLI
+```shell
+docker buildx version
+```
+The Buildx plugin is included in Docker Desktop on Windows, Mac, and Linux (if installed from a DEB or RPM package). If you are on any of the above platforms and if Buildx is still not available, try updating Docker to the latest version.
+
+Or install Buildx manually by following [the instructions here](https://github.com/docker/buildx#installing).
+
 ### Verify image architecture
 ```shell
 docker image inspect <image-id> | grep -i architecture
