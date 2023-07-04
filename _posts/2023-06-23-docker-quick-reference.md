@@ -76,6 +76,22 @@ The Buildx plugin is included in Docker Desktop on Windows, Mac, and Linux (if i
 
 Or install Buildx manually by following [the instructions here](https://github.com/docker/buildx#installing).
 
+### Push image to Docker Hub
+
+Before pushing an image to Docker Hub, you must [create a Docker Hub repository](https://docs.docker.com/docker-hub/repos/create/).
+
+```yaml
+docker tag <image-name>:<tag> <docker-hub-username>/<repo-name>:<tag>
+docker push <docker-hub-username>/<repo-name>:<tag>
+```
+
+`image-name` and `tag` could be any image that you have built locally with `docker build`. 
+
+`docker-hub-username` is your username at Docker Hub.
+
+`repo-name` is the name of the repository that you have created at Docker Hub.
+
+
 ### Verify image architecture
 ```shell
 docker image inspect <image-id> | grep -i architecture
