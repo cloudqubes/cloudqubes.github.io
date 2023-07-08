@@ -98,8 +98,9 @@ The application we are going to use is [number-crunch](https://github.com/cloudq
 
 ## Deploying number-crunch on Kubernetes
 
-We are going to use `kubectl` and YAML manifests to create the `number-crunch` deployment which consists of two pods.
+We will use `kubectl` to deploy the application to the Kubernetes cluster.
 
+Copy this YAML manifest and paste it to `number-crunch-deployment.yml`.
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -122,10 +123,124 @@ spec:
         - containerPort: 8080
 ```
 
-The deployment
+Create the deployment
+```shell
+kubectl apply -f number-crunch-deployment.yml
+```
+
+In the manifest note the parameter `replicas: 2`. It instructts Kubernetes to create two Pods.
+Check the status of the pods.
+```shell
+kubectl get pods -o wide
+```
+If both Pods are `running`, the deployment is successful. 
+
+```shell
+NAME                                READY   STATUS    RESTARTS       AGE    IP            NODE         NOMINATED NODE   READINESS GATES
+number-crunch-app-dfc76fcf9-wz6sn   1/1     Running   0              21h    10.1.131.49   microk8s70   <none>           <none>
+number-crunch-app-dfc76fcf9-bwpt6   1/1     Running   0              21h    10.1.209.44   microk8s60   <none>           <none>
+ubuntu@microk8s40:~$ 
+```
+If you get the `ImagePullBackOff` error, wait a while for the node to retry.
+
+## Creating the Service
+We need a Kubernetes Service to use as the backend of the ingress.
+
+Copy this YAML manifest and paste it to `number-crunch-service.yml`.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: number-crunch-service
+spec:
+  selector:
+    app: number-crunch-app
+  ports:
+  - name: number-crunch-service-port
+    protocol: TCP
+    port: 3001
+    targetPort: 8080
+```
+
+Create `number-crunch-service`.
+```shell
+kubectl apply -f number-crunch-service.yml 
+```
+
+Check the `number-crunch-service`.
+```shell
+kubectl get services
+```
+
+```shell
+NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+number-crunch-service   ClusterIP      10.152.183.242   <none>        3001/TCP         6s
+```
 
 ## Creating an ingress
-Ingress is an API object. We create an Ingress by cerating a Service of type ingress.
+Ingress is an API object which we create by another YAML manifest.
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: number-crunch-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: number-crunch-service
+            port:
+              number: 8080
+```
+
+Copy this to `ingress.yml` and create the ingress resource.
+```shell
+kubectl apply -f ingress.yml
+```
+
+Check the ingress resource.
+```shell
+ kubectl get ingress
+```
+
+```shell
+NAME                    CLASS    HOSTS   ADDRESS     PORTS   AGE
+number-crunch-ingress   public   *       127.0.0.1   80      175m
+```
+
+Test the `number-crunch` application.
+```shell
+curl http://127.0.0.1:80/square-root/4
+```
+```shell
+{"InputNumber":4,"SquareRoot":2}
+```
+
+
+`ingressClassName` identifies the Ingress Controller we wish to use. When there are multiple ingress controllers in a cluster, we can choose the desired ingress controller by specifying this parameter.
+
+If we omit this parameter, Kubernetes will assign the default ingressClass to our ingress. But, if we specify a non-existing ingressClass name, our ingress would still be created, but Kubernetes will not assign an ingress controller for our ingress. So, traffic cannot be routed.
+
+If you find the your ingress is not getting assigned an address, most probably you may have specified a non-existent IngressClass.
+
+You can check the available IngressClasses in your cluster
+```shell
+kubectl get ingressclasses
+```
+
+Here's the output in our MicroK8s cluster.
+```shell
+NAME     CONTROLLER             PARAMETERS   AGE
+public   k8s.io/ingress-nginx   <none>       66d
+nginx    k8s.io/ingress-nginx   <none>       66d
+```
+
 
 ## Managed ingress controllers and your cloud bill
 The implementation architecture of ingress controllers are different from one another. So, when using managed ingress controllers from cloud providers, read the documentation to be familiar with its architecture. 

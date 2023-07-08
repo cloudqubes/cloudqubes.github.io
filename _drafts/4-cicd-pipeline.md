@@ -105,5 +105,5 @@ rm argocd-linux-amd64
 
 Patch the argocd-server workload to expose the service
 ```shell
-$ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 ```

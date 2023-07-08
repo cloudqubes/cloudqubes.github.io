@@ -1,0 +1,17 @@
+
+
+
+```shell
+ubuntu@microk8s40:~$ kubectl port-forward  number-crunch-app-5866dd4d7f-l7hkl 5100:8080
+Forwarding from 127.0.0.1:5100 -> 8080
+Forwarding from [::1]:5100 -> 8080
+```
+
+above does not return.
+From another terminal
+
+```shell
+ubuntu@microk8s40:~$ curl http://127.0.0.1:5100/square-root/4
+{"InputNumber":4,"SquareRoot":2}
+```
+
