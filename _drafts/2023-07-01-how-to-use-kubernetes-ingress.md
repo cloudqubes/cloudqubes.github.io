@@ -196,7 +196,7 @@ spec:
           service:
             name: number-crunch-service
             port:
-              number: 8080
+              number: 3001
 ```
 
 Copy this to `ingress.yml` and create the ingress resource.
@@ -222,6 +222,7 @@ curl http://127.0.0.1:80/square-root/4
 {"InputNumber":4,"SquareRoot":2}
 ```
 
+## IngressClassName
 
 `ingressClassName` identifies the Ingress Controller we wish to use. When there are multiple ingress controllers in a cluster, we can choose the desired ingress controller by specifying this parameter.
 
@@ -241,8 +242,82 @@ public   k8s.io/ingress-nginx   <none>       66d
 nginx    k8s.io/ingress-nginx   <none>       66d
 ```
 
+# Manipulating URLs
 
-## Managed ingress controllers and your cloud bill
+You can use Kubernetes ingress to manipulate URLs.
+Here's a typical usecase.
+
+We need to prefix the exposed URLs of the `number-crunch` with `number-crunch` to avoid any URL duplicates.
+But, we do not want to do any modifications to the `number-crunch` application so its API endpoints are still `/square-root` and `/cube-root`.
+
+![number-crunch app exposed with a URL prefix](/assets/images/k8s-ingress-number-crunch-1.png){: width="100%" }
+*number-crunch app exposed with a URL prefix*
+
+We can use `rewrite annotations` to implement this.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: number-crunch-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /number-crunch/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: number-crunch-service
+            port:
+              number: 3001
+```
+
+Update the `ingress.yml` with the above and update the ingress.
+
+```shell
+kubectl apply -f ingress.yml
+```
+
+Test the new URL with `number-crunch` prefix.
+```shell
+curl http://127.0.0.1:80/number-crunch/square-root/16
+```
+```shell
+{"InputNumber":16,"SquareRoot":4}
+```
+
+Let's scrutinize what's happening here.
+In the `ingress.yml` manifest we define the URL path:
+```yaml
+ - path: /number-crunch/(.*)
+```
+
+This is a regular expression with a [capturing group] (https://www.regular-expressions.info/refcapture.html). `.*` within the paranthesis, captures any string after `number-crunch/` and store the captured value in `$1`. Then, we use `$1` in the rewrite target.
+```yaml
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+```
+Effectively, we are tellting ingress controller to remove the part `number-crunch/` from the URL and keep the rest.
+
+But, our annotations is not quite right. The `number-crunch` root URL returns a list of API end points currently available.
+
+```shell
+curl http://127.0.0.1:80/number-crunch/
+```
+
+```shell
+404 page not found
+```
+
+
+
+If there was a subsequent capturing group, it would be stored in the var
+
+# Managed ingress controllers and your cloud bill
 The implementation architecture of ingress controllers are different from one another. So, when using managed ingress controllers from cloud providers, read the documentation to be familiar with its architecture. 
 
 In AWS, the [AWS Load Balancer Controller][aws-lbc] is responsible only for the `controller` function of the ingress controller. It provisions an [AWS Application Load Balancer] [aws-alb] to handle the HTTP(S) routing. The AWS Application Load Balancer is charged pe hour. When you create a new ingress respource, AWS Application Load Balancer provsiions a new instance of the the AWS Application Load Balancer. But, if you add multiple rules to the same ingress resource, you will need only a single AWS Application Load Balancer. S
