@@ -2,93 +2,111 @@
 layout: post
 title:  "Kubernetes ingress vs ingress controller"
 description: > 
-  Ingress and ingress controller are two frequently-used terms. Are you sure that you know all about them?
-image: "k8s-ingress-cover.png"
+  The complete guide to understand what is Kubernetes ingress, what is ingress controller, and why we need them both.
+image: "k8s-ingress-vs-ingress-controller.png"
 date:   2023-07-06 15:10:00 +0530
 categories: [insights]
 tags: [Kubernetes]
 ---
 
 <div class="header-highlight">
-Kubernetes ingress and ingress controller are two frequently-used terms. When you are starting with Kubernetes networking, they are an important thing that you must get clarified
+Kubernetes ingress and ingress controller are two frequently-used terms. When you are getting starting with Kubernetes, these terms may seem confusing. But, don't worry. Here's all you need to know.
 </div>
 
-An application running inside a Kubernetes cluster is not directly accessible from outside most of the time. For exposing such applications to outside clients, Kubernetes provides several methods.
+An application running inside a Kubernetes cluster is not practically accessible directly from outside.
 
-Ingress is one such method and is better suited for exposing Kubernetes Workloads via HTTP or HTTP(S).
-
-Kubernetes has other mechanisms such as NodePort and LoadBalancer for non-HTTP usecases. 
-
-Unlike other mechanisms, ingress works in layer-7 of the OSI model. So, ingress supports SSL/TLS termination, and URL/subdomain based traffic routing and load balancing, so ingress provides a better mechanism that works only for HTTP(S) applications.
+Kubernetes ingress together with ingress controller implements a mechanism for exposing such applications to the outside world via HTTP or HTTPS protocols. 
 
 # Ingress and Ingress Controller
 
-Ingress is an API object stored in the `etcd` data stoer in Kubernetes. Ingress defines the traffic routing rules. But ingress alone is not sufficient for routing traffic.
+Ingress is an API object stored in the `etcd` data store in Kubernetes. Ingress defines traffic routing rules - how HTTP or HTTPS traffic must be routed to one or more Kubernetes Workloads.
 
-The ingress controller is responsible for routing the HTTP(S) traffic according ot the rules defined in ingress. Typically, Ingress controller is deployed inside the cluster. But, cloud providers like AWS where Pod IP addresses are reachable in the VPC, ingress controller can reside outside the cluster.
+But, ingress alone is not sufficient for routing traffic. You need an ingress controller too.
 
-When the ingress controller is deployed inside the cluster, you need a load balancer to be deployed in front of the ingress controller. 
-
-<div class="inline-highlight">
-An Ingress object defines a set of rules for routing HTTP(S) traffic to Kubernetes Service(s).
-</div>
-An Ingress object defines how HTTP or HTTPS traffic must be routed to one or more Kubernetes Services.
+The ingress controller is responsible for routing HTTP or HTTPS traffic according ot the rules defined in ingress. The rules typically use a Kubernetes Service as the backend for receiving traffic.
 
 ![Ingress and Ingress Controller](/assets/images/k8s-ingress-api-object.png){: width="100%" }
 *Ingress and Ingress Controller*
 
-# Ingress controller implementation
-An ingress controller has two parts.
+# Options for ingress controllers
+An ingress controller has two parts:
 
-It has a reverst proxy which is responsible for routing HTTP(S) requests to appropriate backends - Kubernetes Services.
+- A **reverse proxy** which is responsible for routing HTTP(S) traffic.
 
-The controller watches the Kubernetes API and configures the reverse proxy appropriately - when creating a new Ingress resource.
+- A **controller** watches the Kubernetes API for routing rule changes and configures the reverse proxy appropriately.
 
 ![Concept of an ingress controller](/assets/images/k8s-ingress-controller-how.png){: width="100%" }
 *Concept of an ingress controller*
 
-
-There are several ingress controller implementations - open-source and commercial, managed and self-managed.
+There are several ingress controller implementations that you can choose from - open-source or commercial, managed or self-managed.
 
 ## Open-source ingress controllers
 
-[Ingrsss NGINX controller][ingress-nginx] is an open-source ingress controller that is supported and maintained by the Kubernetes project. It uses NGINX as a reverse proxy and load balancer. 
+[Ingress NGINX controller][ingress-nginx] is an open-source ingress controller that is supported and maintained by the Kubernetes project. It uses NGINX as a reverse proxy and load balancer. 
 
-HA Proxy ingress, Istio Ingree Gateway, and [Traefik Kubernetes ingress provider][traefik] are other open-source ingress controller implementations.
+[HA Proxy ingress][ha-proxy], [Istio Ingress Gateway][istio-ingress], and [Traefik Kubernetes ingress provider][traefik] are other open-source ingress controllers.
 
 ## Commercial ingress controllers
 
-NGINX Ingress Controller - not to be confused with the open-source Ingress Nginx Controller - is a commercial ingress controller offered by Nginx. [FortiADC] is an ingress controller from Fortinet.
+[NGINX Ingress Controller][nginx-ingress] is a commercial ingress controller offered by NGINX. Don't get it confused with the open-source [Ingress NGINX controller][ingress-nginx].
 
 ## Managed ingress controllers 
 
-Running Kubernetes on the public cloud, you can take the advantage of managed ingress controllers offered by the cloud providers. [AWS Load Balancer Controller][aws-lbc], [GKE Ingress from GCP][gke-ingress], and [Web application routing add-on from Azure][azure-ingress] are such managed ingress controllers.
+Running Kubernetes on public cloud, you can take the advantage of the managed ingress controllers offered by the cloud providers.
 
-These managed ingress controllers are offered as add-on to the managed Kubernetes distributions in the respective cloud providers. Once you enable the add-on, the cloud provider takes care of provisioning cloud resources like load balancers when you create ingress objects.
+[AWS Load Balancer Controller][aws-lbc], [GKE Ingress from GCP][gke-ingress], and [Web application routing add-on from Azure][azure-ingress] are such managed ingress controllers.
 
-You can also use other ingress controllers like [Ingress Nginx controller][ingress-nginx] on public clouds. Then you need to provision a network load balancer to route traffic from exteranl applications to the Ingress controller inside the Kubernetes cluster.
+These managed ingress controllers implemented as add-ons of the managed Kubernetes distributions offered by the cloud providers. Once you enable the add-on, the cloud provider takes care of provisioning all cloud resources such as load balancers required for routing traffic to your Kubernetes Workloads.
 
+You can also use other ingress controllers like [Ingress Nginx controller][ingress-nginx] on public clouds. Then, you need to provision a network load balancer to route traffic from exteranl world to the Ingress controller inside your Kubernetes cluster.
 
-# Working with ingress
-Now that we are familiar with the working of ingress and ingress controller, let's use Kubernetes ingress to expose an application to outside.
+# Ingress controller deployment architecture
+An Ingress controller can be deployed inside or outside the Kubernetes cluster.
 
-We'll use MicroK8s from Canonical. It's easy to setup and porvides Ingress NGINX Controller as an add-on. Since Ingress NGINX Controller is installed inside the cluster, we also need a load balancer which MicroK8s provide ass another add-on.
+Inside the cluster, an ingress controller is usually deployed as a Kubernetes DaemonSet. You can deploy an ingress controller as a Deployment too. But a DaemonSet will give you better rsiliency against node failures.
+When the ingress controller is inside the cluster, you need a load balancer in front of the ingress controller. 
 
-Enable both add-ons.
+![Ingress controller inside the cluster](/assets/images/k8s-ingress-with-loadbalancer.png){: width="100%" }
+*Ingress controller inside the cluster*
+
+The load balancer adds an extra hop to the traffic path. You can avoid it by deploying an ingress controller outside the cluster. But, it requires the Pod IP addresses to be reachable to the ingress controller.
+
+![Ingress controller outside the cluster](/assets/images/k8s-ingress-outside-the-cluster.png){: width="100%" }
+*Ingress controller outside the cluster*
+
+HAProxy Kubernetes ingress controller supports this [outside-the-cluster model via BGP peering with Pod IPs](https://www.haproxy.com/blog/run-the-haproxy-kubernetes-ingress-controller-outside-of-your-kubernetes-cluster).
+
+[AWS Load Balancer Controller][aws-lbc] also adopts the outside-the-cluster model. It reaches Pod IPs via [ENI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html).
+
+# Usecases of Kubernetes ingress
+
+Kubernetes Ingress supports exposing Workloads via HTTP or HTTTPS protocols only. 
+
+For Workloads that need to be exposed via any other protocol, you must use NodePort or LoadBalancer services.
+
+NodePort and LoadBalancer Services support any TCP or UDP protocol including HTTP. But, for HTTP usecases ingress offers more features.
+
+Unlike other NodePort or LoadBalancer, ingress works in layer-7 of the OSI model. So, ingress supports SSL/TLS termination, URL/subdomain based traffic routing, etc.
+
+So, ingress must be your go-to method for exposing HTTP(S) Workloads in Kubernetes clusters.
+
+# The easiest ingress controller
+If you want to get your hands dirty, [MicroK8s](https://microk8s.io/) from Canonical is the easiset to setup ingress controller.
+
+Just enable these two add-ons in your MicroK8s cluster and you are good to go.
 
 ```yaml
 microk8s enable ingress
 microk8s enable metallb
 ```
 
-If you are working on a vanilla Kubernetes cluster, you can install Ingress NGINX controller with Helm charts or YAML manifests and `kubectl`.
+## Wrapping up
 
-Then you can install MetalLB by following the relevant installation instructions.
+<div class="inline-highlight">
+Ingress is an API object. Ingress controller is a software application that routes HTTP(s) traffic.
+</div>
 
-MicroK8s and the other installation methods deploys the Ingress NGINX controller as a Daemonset. 
-
-You can run an ingress Controller as a Deploymet also. But, the Daemonset is preferred as it will be risielent agains failure of multiple nodes in the cluster.
-
+We have clarified the difference of ingress and ingress controller. Together ingress and ingress controller implements a mechanism for routing HTTP or HTTPS traffic from outside to Workloads inside the cluster.
 
 [ingress-nginx]: https://github.com/kubernetes/ingress-nginx
 [traefik]: https://doc.traefik.io/traefik/providers/kubernetes-ingress/
@@ -99,3 +117,4 @@ You can run an ingress Controller as a Deploymet also. But, the Daemonset is pre
 [aws-alb]: https://aws.amazon.com/elasticloadbalancing/application-load-balancer/
 [gke-ingress]: https://cloud.google.com/kubernetes-engine/docs/concepts/ingress
 [azure-ingress]: https://learn.microsoft.com/en-us/azure/aks/web-app-routing?tabs=without-osm
+[istio-ingress]: https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/
