@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "What is Kubernetes Ingress"
+title:  "How to use Kubernetes ingress"
 description: > 
-  What is the purpose of Kubernetes Ingress and how to use it to expose HTTP(S) workloads.
+  X usecases of using ingress for exposing HTTP applications inside the cluster
 image: "k8s-ingress-cover.png"
-date:   2023-06-23 15:10:00 +0530
+date:   2023-07-13 15:10:00 +0530
 categories: [hands-on]
 tags: [Kubernetes]
 ---
@@ -13,66 +13,18 @@ tags: [Kubernetes]
 Ingress is a mechanism for exposing HTTP or HTTPS application running inside a Kubernetes cluster. 
 </div>
 
-An application running inside a Kubernetes cluster is not directly accessible from outside most of the time. For exposing such applications to outside clients, Kubernetes provides several methods.
+Kubernetes ingress is a mechanism for exposing applications running inside the Kubernetes cluster via HTTP or HTTPS.
 
-Ingress is one such method and is better suited for exposing Kubernetes Workloads via HTTP or HTTP(S).
+While there are several methods for exposing an application like NodePort or LoadBalancer, ingress is the best option for HTTP applications.
 
-Kubernetes has other mechanisms such as NodePort and LoadBalancer for non-HTTP usecases. 
-
-Unlike other mechanisms, ingress works in layer-7 of the OSI model. So, ingress supports SSL/TLS termination, and URL/subdomain based traffic routing and load balancing, so ingress provides a better mechanism that works only for HTTP(S) applications.
-
-# Ingress and Ingress Controller
-
-Ingress is an API object stored in the `etcd` data stoer in Kubernetes. Ingress defines the traffic routing rules. But ingress alone is not sufficient for routing traffic.
-
-The ingress controller is responsible for routing the HTTP(S) traffic according ot the rules defined in ingress. Typically, Ingress controller is deployed inside the cluster. But, cloud providers like AWS where Pod IP addresses are reachable in the VPC, ingress controller can reside outside the cluster.
-
-When the ingress controller is deployed inside the cluster, you need a load balancer to be deployed in front of the ingress controller. 
-
-<div class="inline-highlight">
-An Ingress object defines a set of rules for routing HTTP(S) traffic to Kubernetes Service(s).
-</div>
-An Ingress object defines how HTTP or HTTPS traffic must be routed to one or more Kubernetes Services.
-
-![Ingress and Ingress Controller](/assets/images/k8s-ingress-api-object.png){: width="100%" }
-*Ingress and Ingress Controller*
-
-# Ingress controller implementation
-An ingress controller has two parts.
-
-It has a reverst proxy which is responsible for routing HTTP(S) requests to appropriate backends - Kubernetes Services.
-
-The controller watches the Kubernetes API and configures the reverse proxy appropriately - when creating a new Ingress resource.
-
-![Concept of an ingress controller](/assets/images/k8s-ingress-controller-how.png){: width="100%" }
-*Concept of an ingress controller*
+We are going to check out x usecases of ingress.
 
 
-There are several ingress controller implementations - open-source and commercial, managed and self-managed.
+# Our Kubernetes setup
 
-## Open-source ingress controllers
+We'll be using MicroK8s from Canonical as our Kubernetes platform.
 
-[Ingrsss NGINX controller][ingress-nginx] is an open-source ingress controller that is supported and maintained by the Kubernetes project. It uses NGINX as a reverse proxy and load balancer. 
-
-HA Proxy ingress, Istio Ingree Gateway, and [Traefik Kubernetes ingress provider][traefik] are other open-source ingress controller implementations.
-
-## Commercial ingress controllers
-
-NGINX Ingress Controller - not to be confused with the open-source Ingress Nginx Controller - is a commercial ingress controller offered by Nginx. [FortiADC] is an ingress controller from Fortinet.
-
-## Managed ingress controllers 
-
-Running Kubernetes on the public cloud, you can take the advantage of managed ingress controllers offered by the cloud providers. [AWS Load Balancer Controller][aws-lbc], [GKE Ingress from GCP][gke-ingress], and [Web application routing add-on from Azure][azure-ingress] are such managed ingress controllers.
-
-These managed ingress controllers are offered as add-on to the managed Kubernetes distributions in the respective cloud providers. Once you enable the add-on, the cloud provider takes care of provisioning cloud resources like load balancers when you create ingress objects.
-
-You can also use other ingress controllers like [Ingress Nginx controller][ingress-nginx] on public clouds. Then you need to provision a network load balancer to route traffic from exteranl applications to the Ingress controller inside the Kubernetes cluster.
-
-
-# Working with ingress
-Now that we are familiar with the working of ingress and ingress controller, let's use Kubernetes ingress to expose an application to outside.
-
-We'll use MicroK8s from Canonical. It's easy to setup and porvides Ingress NGINX Controller as an add-on. Since Ingress NGINX Controller is installed inside the cluster, we also need a load balancer which MicroK8s provide ass another add-on.
+It has Ingress NGINX Controller and MetalLB load balancer ass add-ons.
 
 Enable both add-ons.
 
@@ -81,13 +33,33 @@ microk8s enable ingress
 microk8s enable metallb
 ```
 
-If you are working on a vanilla Kubernetes cluster, you can install Ingress NGINX controller with Helm charts or YAML manifests and `kubectl`.
+Check the status of the Ingress NGINX.
+```shell
+kubectl get pods -n ingress
+```
 
-Then you can install MetalLB by following the relevant installation instructions.
+```shell
+NAME                                      READY   STATUS    RESTARTS   AGE
+nginx-ingress-microk8s-controller-8672t   1/1     Running   0          71d
+nginx-ingress-microk8s-controller-rdmtb   1/1     Running   0          71d
+nginx-ingress-microk8s-controller-lm6l4   1/1     Running   0          71d
+```
 
-MicroK8s and the other installation methods deploys the Ingress NGINX controller as a Daemonset. 
+Check the status of MetalLB
+```shell
+kubectl get pods -n metallb-system
+```
 
-You can run an ingress Controller as a Deploymet also. But, the Daemonset is preferred as it will be risielent agains failure of multiple nodes in the cluster.
+```shell
+NAME                         READY   STATUS    RESTARTS      AGE
+speaker-xfbbt                1/1     Running   6 (72d ago)   99d
+controller-9556c586f-g9r7w   1/1     Running   3 (72d ago)   99d
+speaker-flkmb                1/1     Running   6 (72d ago)   99d
+speaker-h9972                1/1     Running   3 (72d ago)   99d
+```
+
+If all Pods are in `Running ` status, you can proceed to the next step.
+
 
 
 ## number-crunch application
@@ -97,6 +69,11 @@ The application we are going to use is [number-crunch](https://github.com/cloudq
 *number-crunch application*
 
 ## Deploying number-crunch on Kubernetes
+
+We are going to deploy this application with two replicas in to the Kubernetes cluster and expose to the outside world via ingress.
+
+![number-crunch application deployment](/assets/images/k8s-ingress-number-crunch-1-without-prefix.png){: width="100%" }
+*number-crunch application deployment*
 
 We will use `kubectl` to deploy the application to the Kubernetes cluster.
 
@@ -136,10 +113,9 @@ kubectl get pods -o wide
 If both Pods are `running`, the deployment is successful. 
 
 ```shell
-NAME                                READY   STATUS    RESTARTS       AGE    IP            NODE         NOMINATED NODE   READINESS GATES
-number-crunch-app-dfc76fcf9-wz6sn   1/1     Running   0              21h    10.1.131.49   microk8s70   <none>           <none>
-number-crunch-app-dfc76fcf9-bwpt6   1/1     Running   0              21h    10.1.209.44   microk8s60   <none>           <none>
-ubuntu@microk8s40:~$ 
+NAME                                 READY   STATUS    RESTARTS       AGE     IP            NODE         NOMINATED NODE   READINESS GATES
+number-crunch-app-5866dd4d7f-zslzf   1/1     Running   0              3m33s   10.1.209.48   microk8s60   <none>           <none>
+number-crunch-app-5866dd4d7f-74w9v   1/1     Running   0              3m33s   10.1.131.52   microk8s70   <none>           <none>
 ```
 If you get the `ImagePullBackOff` error, wait a while for the node to retry.
 
@@ -175,7 +151,7 @@ kubectl get services
 
 ```shell
 NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
-number-crunch-service   ClusterIP      10.152.183.242   <none>        3001/TCP         6s
+number-crunch-service   ClusterIP      10.152.183.17    <none>        3001/TCP         5m10s
 ```
 
 ## Creating an ingress
@@ -185,18 +161,23 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: number-crunch-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   ingressClassName: nginx
   rules:
   - http:
       paths:
-      - path: /
+      - path: /number-crunch/(.*)
         pathType: Prefix
         backend:
           service:
             name: number-crunch-service
             port:
               number: 3001
+
+
 ```
 
 Copy this to `ingress.yml` and create the ingress resource.
@@ -221,6 +202,13 @@ curl http://127.0.0.1:80/square-root/4
 ```shell
 {"InputNumber":4,"SquareRoot":2}
 ```
+
+# Usecase-#2 URL prefix
+
+To avoid any possible URL duplications, we shall add the prefix `number-crunch` to both endpoints.
+
+![number-crunch application deployment](/assets/images/k8s-ingress-number-crunch-1.png){: width="100%" }
+*number-crunch application deployment*
 
 ## IngressClassName
 
