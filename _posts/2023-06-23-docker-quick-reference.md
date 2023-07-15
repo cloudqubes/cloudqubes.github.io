@@ -128,6 +128,25 @@ Or
 docker container run -d <image-name>:<tag>
 ```
 
+### Publish container port to localhost port
+
+```shell
+docker run -p <localhost port>:<container-port> <image-name>:<tag>
+```
+The host will forward all traffic destined to `localhost-port` to the `container-port` in the running container.
+
+**Example**:
+
+We are running NGNIX web server on port 8080 in the container. 
+```shell
+docker run -p 80:8080 nginx
+```
+Now, we can reach the HTTP server running in port 8080 on `nginx` via:
+```shell
+curl http://127.0.0.1/xyz...
+```
+
+
 ### List running containers
 ```shell
 docker container ls

@@ -20,7 +20,7 @@ While there are several methods for exposing an application like NodePort or Loa
 We are going to check out x usecases of ingress.
 
 
-# Our Kubernetes setup
+# Kubernetes cluster setup
 
 We'll be using MicroK8s from Canonical as our Kubernetes platform.
 
@@ -62,7 +62,7 @@ If all Pods are in `Running ` status, you can proceed to the next step.
 
 
 
-## number-crunch application
+# number-crunch application
 The application we are going to use is [number-crunch](https://github.com/cloudqubes/number-crunch) which is a simple HTTP server with two endpoints.
 
 ![number-crunch application](/assets/images/k8s-ingress-number-crunch-app-only.png){: width="80%" }
@@ -154,8 +154,63 @@ NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)   
 number-crunch-service   ClusterIP      10.152.183.17    <none>        3001/TCP         5m10s
 ```
 
-## Creating an ingress
-Ingress is an API object which we create by another YAML manifest.
+# Usecace #1: Basic use of Kubernetes ingress
+
+Let's create an ingress which allows us to connect to `number-crunch` API endpoints via HTTP.
+
+The `ingress.yml`.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: number-crunch-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: number-crunch-service
+            port:
+              number: 3001
+```
+
+Create the ingress resource.
+```shell
+kubectl apply -f ingress.yml
+```
+
+Check the ingress resource.
+```shell
+ kubectl get ingress
+```
+
+```shell
+NAME                    CLASS    HOSTS   ADDRESS     PORTS   AGE
+number-crunch-ingress   public   *       127.0.0.1   80      175m
+```
+
+Test the `number-crunch` application.
+```shell
+curl http://127.0.0.1/square-root/4
+```
+```shell
+{"InputNumber":4,"SquareRoot":2}
+```
+
+# Usecase #2: Adding a URL prefix
+
+To avoid any possible URL duplications, we shall add the prefix `number-crunch` to both URL endpoints.
+
+![number-crunch application deployment](/assets/images/k8s-ingress-number-crunch-1.png){: width="100%" }
+*number-crunch application deployment*
+
+Update the `ingress.yml` as below.
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -176,39 +231,29 @@ spec:
             name: number-crunch-service
             port:
               number: 3001
-
-
 ```
 
-Copy this to `ingress.yml` and create the ingress resource.
+The URL prefix is handled by `annotations` in @todo
+
+Create the ingress resource.
 ```shell
 kubectl apply -f ingress.yml
 ```
 
-Check the ingress resource.
+Test the URL endpoint application with the prefix.
+
 ```shell
- kubectl get ingress
+curl http://127.0.0.1:80/number-crunch/square-root/16
 ```
 
 ```shell
-NAME                    CLASS    HOSTS   ADDRESS     PORTS   AGE
-number-crunch-ingress   public   *       127.0.0.1   80      175m
+{"InputNumber":16,"SquareRoot":4}
 ```
 
-Test the `number-crunch` application.
-```shell
-curl http://127.0.0.1:80/square-root/4
-```
-```shell
-{"InputNumber":4,"SquareRoot":2}
-```
+# Usecase #3: 
 
-# Usecase-#2 URL prefix
-
-To avoid any possible URL duplications, we shall add the prefix `number-crunch` to both endpoints.
-
-![number-crunch application deployment](/assets/images/k8s-ingress-number-crunch-1.png){: width="100%" }
-*number-crunch application deployment*
+![number-crunch-2 application deployment](/assets/images/k8s-ingress-number-crunch-2.png){: width="100%" }
+*number-crunch-2 application deployment*
 
 ## IngressClassName
 
