@@ -194,6 +194,32 @@ NAME                    CLASS    HOSTS   ADDRESS     PORTS   AGE
 number-crunch-ingress   public   *       127.0.0.1   80      175m
 ```
 
+Sometimes, Kubernetes may take a few to assign the `ADDRESS` to an ingress. If you get blank for the `ADDRESS` please check again in a few minutes. 
+
+There are two important parameters in the ingress that we want to pay attention to.
+## IngressClassName
+
+`ingressClassName` identifies the Ingress Controller we wish to use. When there are multiple ingress controllers in a cluster, we can choose the desired ingress controller by specifying this parameter.
+
+If we omit this parameter, Kubernetes will assign the default ingressClass to our ingress. But, if we specify a non-existing ingressClass name, our ingress would still be created, but Kubernetes will not assign an ingress controller for our ingress. So, traffic cannot be routed.
+
+If you find the your ingress is not getting assigned an address, most probably you may have specified a non-existent IngressClass.
+
+You can check the available IngressClasses in your cluster
+```shell
+kubectl get ingressclasses
+```
+
+Here's the output in our MicroK8s cluster.
+```shell
+NAME     CONTROLLER             PARAMETERS   AGE
+public   k8s.io/ingress-nginx   <none>       66d
+nginx    k8s.io/ingress-nginx   <none>       66d
+```
+
+An ingress defines a set of rules for routing HTTP traffic to back end Kubernetes Services. The ingress we are going to create has just one rule which forwards all traffic to 
+
+
 Test the `number-crunch` application.
 ```shell
 curl http://127.0.0.1/square-root/4
@@ -255,25 +281,7 @@ curl http://127.0.0.1:80/number-crunch/square-root/16
 ![number-crunch-2 application deployment](/assets/images/k8s-ingress-number-crunch-2.png){: width="100%" }
 *number-crunch-2 application deployment*
 
-## IngressClassName
 
-`ingressClassName` identifies the Ingress Controller we wish to use. When there are multiple ingress controllers in a cluster, we can choose the desired ingress controller by specifying this parameter.
-
-If we omit this parameter, Kubernetes will assign the default ingressClass to our ingress. But, if we specify a non-existing ingressClass name, our ingress would still be created, but Kubernetes will not assign an ingress controller for our ingress. So, traffic cannot be routed.
-
-If you find the your ingress is not getting assigned an address, most probably you may have specified a non-existent IngressClass.
-
-You can check the available IngressClasses in your cluster
-```shell
-kubectl get ingressclasses
-```
-
-Here's the output in our MicroK8s cluster.
-```shell
-NAME     CONTROLLER             PARAMETERS   AGE
-public   k8s.io/ingress-nginx   <none>       66d
-nginx    k8s.io/ingress-nginx   <none>       66d
-```
 
 # Manipulating URLs
 
