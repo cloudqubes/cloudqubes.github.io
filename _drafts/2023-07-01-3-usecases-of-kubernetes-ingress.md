@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "How to use Kubernetes ingress"
+title:  "3 Use cases of Kubernetes ingress"
 description: > 
-  X usecases of using ingress for exposing HTTP applications inside the cluster
+  How to use Kubernetes ingress for routing HTTP traffic to applications inside the cluster. It can do some HTTP use cases.
 image: "k8s-ingress-cover.png"
 date:   2023-07-13 15:10:00 +0530
 categories: [hands-on]
@@ -10,19 +10,19 @@ tags: [Kubernetes]
 ---
 
 <div class="header-highlight">
-Ingress is a mechanism for exposing HTTP or HTTPS application running inside a Kubernetes cluster. 
+Kubernetes ingress can route HTTP traffic to applications inside the cluster. It can apply rules to create an abstraction layer
 </div>
 
 Kubernetes ingress is a mechanism for exposing applications running inside the Kubernetes cluster via HTTP or HTTPS.
 
-While there are several methods for exposing an application like NodePort or LoadBalancer, ingress is the best option for HTTP applications.
+Kubernetes ingress implements feature for routing HTTP traffic so that you can create 
 
-We are going to check out x usecases of ingress.
+We are going to check out three usecases of using ingress to route HTTP traffic.
 
 
 # Kubernetes cluster setup
 
-We'll be using MicroK8s from Canonical as our Kubernetes platform.
+We are using MicroK8s from Canonical as our Kubernetes platform.
 
 It has Ingress NGINX Controller and MetalLB load balancer ass add-ons.
 
