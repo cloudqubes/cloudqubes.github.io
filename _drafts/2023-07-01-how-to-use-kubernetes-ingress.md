@@ -154,7 +154,7 @@ NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)   
 number-crunch-service   ClusterIP      10.152.183.17    <none>        3001/TCP         5m10s
 ```
 
-# Usecace #1: Basic use of Kubernetes ingress
+# Use case #1: Exposing an application via HTTP
 
 Let's create an ingress which allows us to connect to `number-crunch` API endpoints via HTTP.
 
@@ -194,9 +194,21 @@ NAME                    CLASS    HOSTS   ADDRESS     PORTS   AGE
 number-crunch-ingress   public   *       127.0.0.1   80      175m
 ```
 
-Sometimes, Kubernetes may take a few to assign the `ADDRESS` to an ingress. If you get blank for the `ADDRESS` please check again in a few minutes. 
+Note the `ADDRESS` and the `PORTS` fields. Our application will be available on http://127.0.0.1/xyz.
+
+If you get blank for the `ADDRESS` field, please check the ingress agian in a few minutes. 
+Sometimes, Kubernetes may take about 30 seconds to assign the `ADDRESS` to an ingress resource. 
+
+Test the `number-crunch` application.
+```shell
+curl http://127.0.0.1/square-root/4
+```
+```shell
+{"InputNumber":4,"SquareRoot":2}
+```
 
 There are two important parameters in the ingress that we want to pay attention to.
+
 ## IngressClassName
 
 `ingressClassName` identifies the Ingress Controller we wish to use. When there are multiple ingress controllers in a cluster, we can choose the desired ingress controller by specifying this parameter.
@@ -217,20 +229,14 @@ public   k8s.io/ingress-nginx   <none>       66d
 nginx    k8s.io/ingress-nginx   <none>       66d
 ```
 
-An ingress defines a set of rules for routing HTTP traffic to back end Kubernetes Services. The ingress we are going to create has just one rule which forwards all traffic to 
+## rules
+
+An ingress defines a set of rules for routing HTTP traffic to back end Kubernetes Services. The ingress we are going to create has just one rule which forwards all traffic to `number-crunch` Service on port 3001.
 
 
-Test the `number-crunch` application.
-```shell
-curl http://127.0.0.1/square-root/4
-```
-```shell
-{"InputNumber":4,"SquareRoot":2}
-```
+# Use case #2: Adding a URL prefix
 
-# Usecase #2: Adding a URL prefix
-
-To avoid any possible URL duplications, we shall add the prefix `number-crunch` to both URL endpoints.
+To avoid URL duplications, we shall add the prefix `number-crunch` to both URL endpoints.
 
 ![number-crunch application deployment](/assets/images/k8s-ingress-number-crunch-1.png){: width="100%" }
 *number-crunch application deployment*
@@ -259,8 +265,6 @@ spec:
               number: 3001
 ```
 
-The URL prefix is handled by `annotations` in @todo
-
 Create the ingress resource.
 ```shell
 kubectl apply -f ingress.yml
@@ -276,11 +280,29 @@ curl http://127.0.0.1:80/number-crunch/square-root/16
 {"InputNumber":16,"SquareRoot":4}
 ```
 
-# Usecase #3: 
+We have used ingress `annotations` to manipulate the URLs. The `rewrite-target` replaces the URI according to regex. 
+In the `path` parameter, we sepcufy `number-crunch/(.*)`. The characters inside the braces is a regex Capture Group and will be copied to numbered placeholders like $1, $2, $n. Since we have only one capture group, it will be available in $1. 
+
+So `/number-crunch/(.*)` will copy the string after `/number-crunch/` to $1. As an example, the of the HTTP request has URI `/number-crunch/square-root/4`, `square-root/4` will be available in $1. 
+
+Then, we are using `rewrite-target` to instruct the ingress controller to replace the URL with the string available in $1. So, effectively we are deleting `/number-crunch` from the URL and our microservice will recieve URI as `/square-root/<numer>` or `/cube-root/<numner>`
+
+# Use case #3: 
 
 ![number-crunch-2 application deployment](/assets/images/k8s-ingress-number-crunch-2.png){: width="100%" }
 *number-crunch-2 application deployment*
 
+Our `number-crunch` application is gaiing popularity and millions of requests everyday. We want to make it more scalable by splitting the `square-root` and `cube-root` URLs ot two different microervices.
+
+So, we creat the [number-crunch-2] application.
+
+It has two microservice so we create two deployments.
+
+And two services.
+
+The ingress routing to two services.
+
+It's also possible to create two separate ingresses for this. 
 
 
 # Manipulating URLs
@@ -372,11 +394,4 @@ When you enable a managed ingress con
 
 
 [ingress-nginx]: https://github.com/kubernetes/ingress-nginx
-[traefik]: https://doc.traefik.io/traefik/providers/kubernetes-ingress/
-[nginx-ingress]: https://www.nginx.com/products/nginx-ingress-controller/
-[FortiADC]: https://docs.fortinet.com/document/fortiadc/7.0.0/fortiadc-ingress-controller-1-0/742835/fortiadc-ingress-controller-overview
-[ha-proxy]: https://haproxy-ingress.github.io
-[aws-lbc]: https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html
-[aws-alb]: https://aws.amazon.com/elasticloadbalancing/application-load-balancer/
-[gke-ingress]: https://cloud.google.com/kubernetes-engine/docs/concepts/ingress
-[azure-ingress]: https://learn.microsoft.com/en-us/azure/aks/web-app-routing?tabs=without-osm
+[number-crunch-2]: @todo
