@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "3 Use cases of Kubernetes ingress"
+title:  "How to use Kubernetes ingress for routing HTTP traffic"
 description: > 
-  How to use Kubernetes ingress for routing HTTP traffic to applications inside the cluster. It can do some HTTP use cases.
+  Ingress is the preferred way of exposing HTTP applications in Kubernetes. It can manipulate HTTP requests and route traffic to multiple applications inside the cluster.
 image: "k8s-ingress-cover.png"
 date:   2023-07-13 15:10:00 +0530
 categories: [hands-on]
@@ -10,21 +10,31 @@ tags: [Kubernetes]
 ---
 
 <div class="header-highlight">
-Kubernetes ingress can route HTTP traffic to applications inside the cluster. It can apply rules to create an abstraction layer
+Ingress is the preferred way of exposing HTTP applications in Kubernetes. It can manipulate HTTP requests and route traffic to multiple applications inside the cluster.
 </div>
 
-Kubernetes ingress is a mechanism for exposing applications running inside the Kubernetes cluster via HTTP or HTTPS.
+[Kubernetes ingress] is a mechanism for exposing applications running inside a Kubernetes cluster via HTTP or HTTPS.
 
-Kubernetes ingress implements feature for routing HTTP traffic so that you can create 
+![Kubernetes ingress - simplified](/assets/images/k8s-ingress-simplified.png){: width="100%" }
+*Kubernetes ingress - simplified*
+
+This is a simple representation of Kubernetes ingress. To learn how ingress works, you can read the post on [Kubenetes ingress vs ingress controller]({% post_url 2023-07-09-ingress-vs-ingress-controller %}).
+
+
+[NodePort] or [LoadBalancer] Services also can expose an application running inside a cluster. But, both [NodePort] and [LoadBalancer] Services are working in layer-3.
+
+Ingress can work with HTTP protocol in layer-7 so it offers more flexibility for HTTP-based applications. It's simeple to setup and do not hav e some of the limitations in NodePort or LoadBalancer Services. 
+
+So, ingress should be your preferred way for HTTP applications.
 
 We are going to check out three usecases of using ingress to route HTTP traffic.
 
 
 # Kubernetes cluster setup
 
-We are using MicroK8s from Canonical as our Kubernetes platform.
+We are using MicroK8s from Canonical as our Kubernetes platform for demonstration.
 
-It has Ingress NGINX Controller and MetalLB load balancer ass add-ons.
+MicroK8s comes with Ingress NGINX Controller as an add-ons. Since Ingress NGINX controller is deployed inside the cluster, we need a load balancer to be placed in front of the ingress controller. So we'll use MetalLB load balancer which comes as another add-on in MicroK8s.
 
 Enable both add-ons.
 
@@ -61,21 +71,21 @@ speaker-h9972                1/1     Running   3 (72d ago)   99d
 If all Pods are in `Running ` status, you can proceed to the next step.
 
 
-
 # number-crunch application
-The application we are going to use is [number-crunch](https://github.com/cloudqubes/number-crunch) which is a simple HTTP server with two endpoints.
+
+We will use [number-crunch](https://github.com/cloudqubes/number-crunch) application which is a simple HTTP server with two API endpoints.
 
 ![number-crunch application](/assets/images/k8s-ingress-number-crunch-app-only.png){: width="80%" }
 *number-crunch application*
 
 ## Deploying number-crunch on Kubernetes
 
-We are going to deploy this application with two replicas in to the Kubernetes cluster and expose to the outside world via ingress.
+We are going to deploy this application with two replicas in to the Kubernetes cluster and expose to the outside via ingress.
 
 ![number-crunch application deployment](/assets/images/k8s-ingress-number-crunch-1-without-prefix.png){: width="100%" }
 *number-crunch application deployment*
 
-We will use `kubectl` to deploy the application to the Kubernetes cluster.
+We will use `kubectl` to manage the Kubernetes resources.
 
 Copy this YAML manifest and paste it to `number-crunch-deployment.yml`.
 ```yaml
@@ -100,7 +110,7 @@ spec:
         - containerPort: 8080
 ```
 
-Create the deployment
+Create the deployment.
 ```shell
 kubectl apply -f number-crunch-deployment.yml
 ```
@@ -120,7 +130,7 @@ number-crunch-app-5866dd4d7f-74w9v   1/1     Running   0              3m33s   10
 If you get the `ImagePullBackOff` error, wait a while for the node to retry.
 
 ## Creating the Service
-We need a Kubernetes Service to use as the backend of the ingress.
+We need a Kubernetes Service to be used as the backend for the ingress.
 
 Copy this YAML manifest and paste it to `number-crunch-service.yml`.
 
@@ -156,9 +166,9 @@ number-crunch-service   ClusterIP      10.152.183.17    <none>        3001/TCP  
 
 # Use case #1: Exposing an application via HTTP
 
-Let's create an ingress which allows us to connect to `number-crunch` API endpoints via HTTP.
+As out first use case, we wil simply expose the API endpoints as they are.
 
-The `ingress.yml`.
+Create `ingress.yml` by copy-pasting this YAML.
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -179,6 +189,36 @@ spec:
               number: 3001
 ```
 
+Note these two important parameters in `ingress.yml`.
+
+## IngressClassName
+
+`ingressClassName` identifies the Ingress Controller we wish to use. 
+
+When there are multiple ingress controllers in a cluster, we can choose the desired ingress controller by specifying this parameter.
+
+If we omit this parameter, Kubernetes will assign the default ingressClass to our ingress. If we specify a non-existing ingress controlle, our ingress would still be created, but Kubernetes will not assign an ingress controller for our ingress. So, traffic cannot be routed.
+
+If you find the your ingress is not getting assigned an address, most probably you may have specified a non-existent ingress controller.
+
+You can check the available IngressClasses in your cluster
+```shell
+kubectl get ingressclasses
+```
+
+Here's what we got in our MicroK8s cluster.
+```shell
+NAME     CONTROLLER             PARAMETERS   AGE
+public   k8s.io/ingress-nginx   <none>       1d
+nginx    k8s.io/ingress-nginx   <none>       1d
+```
+
+## rules
+
+An ingress defines a set of rules for routing HTTP traffic to the back-end Kubernetes Services. The ingress we are going to create has just one rule which forwards all traffic to `number-crunch` Service on port 3001.
+
+
+
 Create the ingress resource.
 ```shell
 kubectl apply -f ingress.yml
@@ -196,8 +236,8 @@ number-crunch-ingress   public   *       127.0.0.1   80      175m
 
 Note the `ADDRESS` and the `PORTS` fields. Our application will be available on http://127.0.0.1/xyz.
 
-If you get blank for the `ADDRESS` field, please check the ingress agian in a few minutes. 
-Sometimes, Kubernetes may take about 30 seconds to assign the `ADDRESS` to an ingress resource. 
+If the `ADDRESS` field is blank, please check the ingress agian in a few minutes. 
+Sometimes, Kubernetes may take about 30 seconds to assign the `ADDRESS` to a newly-created ingress resource. 
 
 Test the `number-crunch` application.
 ```shell
@@ -206,32 +246,6 @@ curl http://127.0.0.1/square-root/4
 ```shell
 {"InputNumber":4,"SquareRoot":2}
 ```
-
-There are two important parameters in the ingress that we want to pay attention to.
-
-## IngressClassName
-
-`ingressClassName` identifies the Ingress Controller we wish to use. When there are multiple ingress controllers in a cluster, we can choose the desired ingress controller by specifying this parameter.
-
-If we omit this parameter, Kubernetes will assign the default ingressClass to our ingress. But, if we specify a non-existing ingressClass name, our ingress would still be created, but Kubernetes will not assign an ingress controller for our ingress. So, traffic cannot be routed.
-
-If you find the your ingress is not getting assigned an address, most probably you may have specified a non-existent IngressClass.
-
-You can check the available IngressClasses in your cluster
-```shell
-kubectl get ingressclasses
-```
-
-Here's the output in our MicroK8s cluster.
-```shell
-NAME     CONTROLLER             PARAMETERS   AGE
-public   k8s.io/ingress-nginx   <none>       66d
-nginx    k8s.io/ingress-nginx   <none>       66d
-```
-
-## rules
-
-An ingress defines a set of rules for routing HTTP traffic to back end Kubernetes Services. The ingress we are going to create has just one rule which forwards all traffic to `number-crunch` Service on port 3001.
 
 
 # Use case #2: Adding a URL prefix
@@ -292,17 +306,199 @@ Then, we are using `rewrite-target` to instruct the ingress controller to replac
 ![number-crunch-2 application deployment](/assets/images/k8s-ingress-number-crunch-2.png){: width="100%" }
 *number-crunch-2 application deployment*
 
-Our `number-crunch` application is gaiing popularity and millions of requests everyday. We want to make it more scalable by splitting the `square-root` and `cube-root` URLs ot two different microervices.
+`number-crunch` is gaining popularity so is getting millions of requests everyday. 
+<span>
+&#128512;
+</span>
 
-So, we creat the [number-crunch-2] application.
+We want to make `number-crunch` more scalable. So, we split the `square-root` and `cube-root` API end-points to two different micro-services and create [number-crunch-2].
 
-It has two microservice so we create two deployments.
+We want to deploy `number-crucnch-2` while ensuring our clients do not have to change their URLs. 
 
-And two services.
+We can easily achieve this by manipulating URLs in ingress.
 
-The ingress routing to two services.
+Let's deploy the two microservices.
 
-It's also possible to create two separate ingresses for this. 
+Create `square-root.yml` manifest.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: square-root-app
+spec:
+  selector:
+    matchLabels:
+      app: square-root-app
+  replicas: 2 
+  template:
+    metadata:
+      labels:
+        app: square-root-app
+    spec:
+      containers:
+      - name: square-root-app
+        image: cloudqubes/square-root:2.0.1
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: square-root-service
+spec:
+  selector:
+    app: square-root-app
+  ports:
+  - name: square-root-service-port
+    protocol: TCP
+    port: 3001
+    targetPort: 8080
+
+```
+
+```shell
+kubectl apply -f square-root.yml
+```
+
+Create `cube-root.yml` manifest.
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cube-root-app
+spec:
+  selector:
+    matchLabels:
+      app: cube-root-app
+  replicas: 2 
+  template:
+    metadata:
+      labels:
+        app: cube-root-app
+    spec:
+      containers:
+      - name: cube-root-app
+        image: cloudqubes/cube-root:2.0.1
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cube-root-service
+spec:
+  selector:
+    app: cube-root-app
+  ports:
+  - name: cube-root-service-port
+    protocol: TCP
+    port: 3001
+    targetPort: 8080
+```
+
+
+```shell
+kubectl apply -f cube-root.yml
+```
+
+Check the deployments and the Services.
+```shell
+kubectl get deployments
+```
+
+```shell
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+square-root-app    2/2     2            2           10m
+cube-root-app      2/2     2            2           10m
+```
+
+```shell
+kubectl get services
+```
+
+```shell
+NAME                  TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+square-root-service   ClusterIP      10.152.183.195   <none>        3001/TCP         12m
+cube-root-service     ClusterIP      10.152.183.104   <none>        3001/TCP         12m
+```
+
+Since all Pods are running and the Service is configured, we'll create the ingress.
+
+ingress.yml
+It's also possible to create two separate ingresses but, we are creating only one here.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: number-crunch-2-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1/$2
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /number-crunch/(square-root)/(.*)?$
+        pathType: Prefix
+        backend:
+          service:
+            name: square-root-service
+            port:
+              number: 3001
+      - path: /number-crunch/(cube-root)/(.*)?$
+        pathType: Prefix
+        backend:
+          service:
+            name: cube-root-service
+            port:
+              number: 3001
+```
+
+This ingress has two rules. Each path has two regex capturing groups, which copy the string to `$1` and `$2` respectively.
+
+In the annotation `rewrite-target` we use `/$1/$2` so effectively removing the `number-crunch/` part in the URL.
+
+Each http rule route the traffic to backend `square-root-service` and `cube-root-service`.
+
+Create the ingress.
+
+```shell
+kubectl apply -f ingress.yml
+```
+
+Check the ingress status.
+```shell
+kubectl get ingress
+```
+
+```shell
+NAME                      CLASS   HOSTS   ADDRESS     PORTS   AGE
+number-crunch-2-ingress   nginx   *       127.0.0.1   80      4m20s
+```
+
+Test the API end-points with `curl`.
+```shell
+curl http://127.0.0.1:80/number-crunch/square-root/16
+```
+
+```shell
+{"InputNumber":16,"SquareRoot":4}
+```
+
+```shell
+curl http://127.0.0.1:80/number-crunch/cube-root/16
+```
+
+```shell
+{"InputNumber":16,"CubeRoot":2.5198420997897464}
+```
+
+
+
+
 
 
 # Manipulating URLs
@@ -394,4 +590,7 @@ When you enable a managed ingress con
 
 
 [ingress-nginx]: https://github.com/kubernetes/ingress-nginx
-[number-crunch-2]: @todo
+[number-crunch-2]: https://github.com/cloudqubes/number-crunch-2
+[Kubernetes ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
+[NodePort]: https://cloudqubes.substack.com/i/106867327/nodeport
+[LoadBalancer]: https://cloudqubes.substack.com/i/111987521/loadbalancer-services
