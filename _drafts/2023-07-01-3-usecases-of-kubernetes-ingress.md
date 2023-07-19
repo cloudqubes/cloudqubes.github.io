@@ -21,38 +21,46 @@ Ingress is the preferred way of exposing HTTP applications in Kubernetes. It can
 This is a simple representation of Kubernetes ingress. To learn how ingress works, you can read the post on [Kubenetes ingress vs ingress controller]({% post_url 2023-07-09-ingress-vs-ingress-controller %}).
 
 
-[NodePort] or [LoadBalancer] Services also can expose an application running inside a cluster. But, both [NodePort] and [LoadBalancer] Services are working in layer-3.
+[NodePort] or [LoadBalancer] Services also can expose an application running inside a cluster. But, both [NodePort] and [LoadBalancer] Services work in layer-3 in OSI model.
 
-Ingress can work with HTTP protocol in layer-7 so it offers more flexibility for HTTP-based applications. It's simeple to setup and do not hav e some of the limitations in NodePort or LoadBalancer Services. 
+Ingress works with HTTP protocol in layer-7 so offers more flexibility for HTTP-based applications. Also, ingress does not have some of the limitations in [NodePort] or [LoadBalancer] Services. 
 
-So, ingress should be your preferred way for HTTP applications.
+So, ingress should be your preferred way for exposing HTTP applications inside a Kubernetes cluster to external clients.
 
-We are going to check out three usecases of using ingress to route HTTP traffic.
+An ingress defines a set of rules for routing HTTP traffic. You can use these rules to manipulate HTTP requests. 
+
+Let's check out three such usecases of ingress rules.
 
 
 # Kubernetes cluster setup
 
-We are using MicroK8s from Canonical as our Kubernetes platform for demonstration.
+We are using [MicroK8s] from Canonical as our Kubernetes platform for this demonstration.
 
-MicroK8s comes with Ingress NGINX Controller as an add-ons. Since Ingress NGINX controller is deployed inside the cluster, we need a load balancer to be placed in front of the ingress controller. So we'll use MetalLB load balancer which comes as another add-on in MicroK8s.
+[MicroK8s] includes [Ingress NGINX Controller] as an add-on. Since [Ingress NGINX controller] is deployed inside the cluster, we need to place a load balancer in front of the ingress controller. So we'll use [MetalLB] load balancer which comes as another add-on in [MicroK8s].
 
-Enable both add-ons.
+Let's enable both add-ons in our cluster.
 
 ```yaml
 microk8s enable ingress
 microk8s enable metallb
 ```
 
-Check the status of the Ingress NGINX.
+![Microk8s cluster](/assets/images/k8s-ingress-microk8s.png){: width="100%" }
+*MicroK8s cluster*
+
+Since this entire setup is installed in a single virtual machine, our application will be accessible only via localhost (127.0.0.1). But in a production Kubernetes cluster the application will be avialble from a public IP in load balancer.
+
+
+Check the status of Ingress NGINX Controller.
 ```shell
 kubectl get pods -n ingress
 ```
 
 ```shell
 NAME                                      READY   STATUS    RESTARTS   AGE
-nginx-ingress-microk8s-controller-8672t   1/1     Running   0          71d
-nginx-ingress-microk8s-controller-rdmtb   1/1     Running   0          71d
-nginx-ingress-microk8s-controller-lm6l4   1/1     Running   0          71d
+nginx-ingress-microk8s-controller-8672t   1/1     Running   0          2m10s
+nginx-ingress-microk8s-controller-rdmtb   1/1     Running   0          2m10s
+nginx-ingress-microk8s-controller-lm6l4   1/1     Running   0          2m10s
 ```
 
 Check the status of MetalLB
@@ -62,25 +70,27 @@ kubectl get pods -n metallb-system
 
 ```shell
 NAME                         READY   STATUS    RESTARTS      AGE
-speaker-xfbbt                1/1     Running   6 (72d ago)   99d
-controller-9556c586f-g9r7w   1/1     Running   3 (72d ago)   99d
-speaker-flkmb                1/1     Running   6 (72d ago)   99d
-speaker-h9972                1/1     Running   3 (72d ago)   99d
+speaker-xfbbt                1/1     Running   6 (72d ago)   14m
+controller-9556c586f-g9r7w   1/1     Running   3 (72d ago)   14m
+speaker-flkmb                1/1     Running   6 (72d ago)   14m
+speaker-h9972                1/1     Running   3 (72d ago)   14m
 ```
 
 If all Pods are in `Running ` status, you can proceed to the next step.
 
 
-# number-crunch application
+# The number-crunch application
 
-We will use [number-crunch](https://github.com/cloudqubes/number-crunch) application which is a simple HTTP server with two API endpoints.
+We will use [number-crunch](https://github.com/cloudqubes/number-crunch) application for this ingress use cases demonstration. 
+
+The `number-crunch` is a simple HTTP server with two API endpoints.
 
 ![number-crunch application](/assets/images/k8s-ingress-number-crunch-app-only.png){: width="80%" }
 *number-crunch application*
 
 ## Deploying number-crunch on Kubernetes
 
-We are going to deploy this application with two replicas in to the Kubernetes cluster and expose to the outside via ingress.
+We will deploy `number-crunch` with two replicas in our MicroK8s cluster.
 
 ![number-crunch application deployment](/assets/images/k8s-ingress-number-crunch-1-without-prefix.png){: width="100%" }
 *number-crunch application deployment*
@@ -594,3 +604,6 @@ When you enable a managed ingress con
 [Kubernetes ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [NodePort]: https://cloudqubes.substack.com/i/106867327/nodeport
 [LoadBalancer]: https://cloudqubes.substack.com/i/111987521/loadbalancer-services
+[MicroK8s]: https://microk8s.io
+[Ingress NGINX controller]:
+[MetalLB]:
