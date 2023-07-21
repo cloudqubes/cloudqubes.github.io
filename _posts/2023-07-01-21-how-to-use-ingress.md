@@ -4,7 +4,7 @@ title:  "How to use Kubernetes ingress for routing HTTP traffic"
 description: > 
   Ingress is the preferred way of exposing HTTP applications in Kubernetes. It can manipulate HTTP requests and route traffic to multiple applications inside the cluster.
 image: "k8s-ingress-cover.png"
-date:   2023-07-13 15:10:00 +0530
+date:   2023-07-21 07:10:00 +0530
 categories: [hands-on]
 tags: [Kubernetes]
 ---
@@ -500,16 +500,13 @@ curl http://127.0.0.1:80/number-crunch/cube-root/16
 {"InputNumber":16,"CubeRoot":2.5198420997897464}
 ```
 
-# Wrapping up
+# Ingress in production
 
-Ingress is the preferred method for exposing HTTP and HTTPS applications in Kubernetes. It gives you lot of flexibility for manipulating URLs and routing traffic.
+Ingress is the preferred method for routing external HTTP and HTTPS traffic to applications inside a Kubernetes cluster. 
 
-We demonstrated three use cases of manipulating URLs with ingress annotations.
+We demonstrated three HTTP routing use cases with [Ingress NGINX Controller][ingress-nginx] in a [MicroK8s] cluster.
 
-But, ingress can do much more. you can refer the ingress documentation for all you can do with annotations.
-
-
-
+If you are using a different ingress controller, please refer the relevant documentation as the features and functions may vary across different ingress controller implementations.
 
 [ingress-nginx]: https://github.com/kubernetes/ingress-nginx
 [number-crunch-2]: https://github.com/cloudqubes/number-crunch-2
