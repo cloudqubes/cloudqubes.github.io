@@ -10,22 +10,56 @@
 $ sudo apt-get install git-core
 ```
 
-### Create user
+### Create user and enable SSH key authentication
 
 ```shell
-$ sudo useradd git
-$ sudo passwd git
+sudo adduser git
 ```
 
 Type in `git123` for the password.
-Enable SSH key-based authentication for passwordless entry.
+This will create the `git` user and home directory `/home/git` for the user.
 
+<!-- Switch to `git` user and change to home directory.
+```shell
+su git
+cd 
+```
 
-### Create a project directory
+Create `.ssh/authorized_keys` and limit read/write permission only to `git` user.
 
 ```shell
-$ mkdir cloudqubes.git
+mkdir .ssh
+chmod 700 .ssh
+touch .ssh/authorized_keys
+chmod 600 .ssh/authorized_keys
+``` -->
+
+Create an SSH key in the developer machine.
+```shell
+ssh-keygen -f .ssh/git_server
 ```
+
+Copy the public key to git server
+```shell
+ssh-copy-id -i .ssh/git_server git@740-1-cicd
+```
+
+Create a directory for storing git repos on git server and give permission to `git user`
+Execute from `ubuntu` user.
+```shell
+sudo mkdir /srv/git
+sudo chown git /srv/git/
+sudo chgrp git /srv/git
+```
+
+### Create a project directory and initialize an empty git repo
+
+```shell
+mkdir number-crunch.git
+cd number-crunch.git
+git init --bare
+```
+Note the parametet `--bare` which we use in the git server to create a repository.
 
 ### Install Jenkins
 
@@ -101,9 +135,19 @@ curl -s SL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/la
 sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
 rm argocd-linux-amd64
 ```
+@todo: client is giving error segmentation fault
 
+### Login to ArgoCD UI
 
 Patch the argocd-server workload to expose the service
 ```shell
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 ```
+Get the argocd initial admin password. It is stored in Kubernetes secret `argocd-initial-admin-secret` base64 encoded.
+```shell
+kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath='{.data.password}' | base64 -d
+```
+
+Login to the ArgoCD UI from the node running MicroK8s. in a production cluster you would get a public IP address to access the ArgoCD UI.
+
+
