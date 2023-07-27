@@ -3,7 +3,7 @@ layout: post
 title:  "What is Jenkins and what can I do with it"
 description: > 
   How to use Jenkins to build a CI/CD pipeline.
-image: "git-cover.png"
+image: "jenkins/jenkins-cover.png"
 date:   2023-07-23 05:50:00 +0530
 categories: [hands-on]
 tags: [DevOps]
