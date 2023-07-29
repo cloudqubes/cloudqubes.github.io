@@ -163,6 +163,16 @@ Click the first entry in the build histroy and click on the `Console output` in 
 
 ## Creating the git repo
 
+Go to your Git repository server and create a new git repositoty.
+
+```shell
+su git
+cd /srv/git
+mkdir number-crunch.git
+cd number-crunch.git
+git init --bare
+```
+
 Clone the repo number-crunch to your local machine and update the remote URL to point to the private git repo.
 
 ```shell
@@ -195,14 +205,12 @@ pipeline {
 }
 ```
 
-Go to your Git repository server and create a new git repositoty.
+Commit the repo to our private Git server.
 
 ```shell
-su git
-cd /srv/git
-mkdir number-crunch.git
-git init --bare
+
 ```
+
 
 In the Jenkins dashboard page clikc on `New item` at the top right to create a new project. 
 
