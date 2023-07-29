@@ -64,6 +64,7 @@ Switch to `git` user and create a repository.
 su git
 cd /srv/git
 mkdir coffee-app.git
+cd coffee-app.git
 git init --bare
 ```
 
