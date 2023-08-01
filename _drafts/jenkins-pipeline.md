@@ -173,12 +173,53 @@ cd number-crunch.git
 git init --bare
 ```
 
-Clone the repo number-crunch to your local machine and update the remote URL to point to the private git repo.
+Create a new folder in your development workstation and create these three files.
 
-```shell
-git clone git@github.com:cloudqubes/number-crunch.git
-git remote set-url origin git@10.129.204.148:/srv/git/number-crunch.git
+counter.go
+```go
+package main
+
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"os"
+)
+
+// Global variable for counter
+var count int
+
+func countUp(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	count = count + 1
+	json.NewEncoder(w).Encode(count)
+}
+
+func countDown(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	count = count - 1
+	json.NewEncoder(w).Encode(count)
+}
+
+func main() {
+	http.HandleFunc("/count-up", countUp)
+	http.HandleFunc("/count-down", countDown)
+
+	fmt.Printf("Starting server on port 9000\n")
+	count = 0
+	fmt.Printf("Counter :%d\n", count)
+	err := http.ListenAndServe(":9000", nil)
+	if errors.Is(err, http.ErrServerClosed) {
+		fmt.Printf("Shutting down server\n")
+	} else if err != nil {
+		fmt.Printf("Cannot start server :%s\n", err)
+		os.Exit(1)
+	}
+}
 ```
+//todo add the go.mod and Dockerfile
+
 
 Add a dummy Jenkins file.
 ```shell
@@ -208,12 +249,88 @@ pipeline {
 Commit the repo to our private Git server.
 
 ```shell
-
+git init
+git add .
+git commit -m "initial"
+git remote add origin git@10.129.204.148:/srv/git/counter-app.git
+git push -u origin master
 ```
 
+## Create a SSH private key for `jenkins` user.
 
+We want our Jenkins server to be able to access this git repository. We'll do so by creating an SSH key.
+Login to the Jenkins VM via SSH and create a private key for the `jenkins` user.
+
+Switch to the `jenkins` user.  
+Note that `jenkins` is a service account so it is not have a default shell so we specifiy it via `-s`
+```shell
+sudo su -s /bin/bash jenkins
+```
+
+Create SSH Key pair.
+```
+ssh-keygen
+```
+Note that keys will be stored in `/var/lib/jenkins/.ssh/` as you can check from the output.
+
+Copy the keys to our git server.
+```shell
+ssh-copy-id /var/lib/jenkins/.ssh/id_rsa.pub git@10.129.204.148
+```
+
+In this step you will also be adding the key fingerprint to `/var/lib/jenkins/.ssh/known_hosts`. 
+
+Verify SSH access.
+```shell
+ssh -i /var/lib/jenkins/.ssh/id_rsa git@10.129.204.148
+```
+
+Copy the SSH key private key.
+```shell
+cat /var/lib/jenkins/.ssh/id_rsa
+```
+
+Keep this ready as you will need it in the next step.
+
+## Create the Jenkins project
 In the Jenkins dashboard page clikc on `New item` at the top right to create a new project. 
 
-![Creating the Number-crunch Pipeline](/assets/images/jenkins/number-crunch-pipeline-1.png){: width="100%" }
-*Creating the Number-crunch Pipeline*
+![Creating the Counter-app Pipeline](/assets/images/jenkins/counter-app-pipeline-1.png){: width="100%" }
+*Creating the Counter-app Pipeline*
+
+Select `Pipeline` and give name as `counter-app` and click `OK`.
+
+
+In the next page, scroll down to the Pipeline section.
+
+![Pipeline definition](/assets/images/jenkins/counter-app-pipeline-2.png){: width="100%" }
+*Pipeline definition*
+
+In the Definition filed, select `Pipeline script from SCM` to indicate Jenkins to extract the Jenkinsfile from the git repo.
+Select Git in the SCM field.
+
+In the repository URL enter `git remote add origin git@10.129.204.148:/srv/git/counter-app.git`.
+
+Next, we need to provide the credentials for Jenikins server to access our repository. Click `Add` under the credentials field.
+
+Select `SSH Username with private key` as the kind.
+
+Type in `git` in the username field.
+
+![Git server credentials](/assets/images/jenkins/counter-app-pipeline-credentials.png){: width="100%" }
+*Git server credentials*
+
+Under `private key` select `Enter directly` and copy paste the SSH private key that we created in the Jenkins server in the previous section. Then click `Add`.
+
+![Git server credentials - private key](/assets/images/jenkins/counter-app-pipeline-credentials-2.png){: width="100%" }
+*Git server credentials - private key*
+
+In the branches filed select `*/master` as the branch to build.
+
+Click `Save` to create the Pipeline.
+
+# Updating the Jenkins file
+
+Our `Jenkinsfile` is still a dummy. We need to update it with the real world build steps.
+
 
