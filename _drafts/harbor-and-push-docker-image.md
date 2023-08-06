@@ -1,19 +1,76 @@
 ---
 layout: post
 title:  "How to set up a private container registry with Harbor"
-description: > 
-  Harbor is an open-source container registry. You can 
+description: >
+  Harbor can store your container images inside your data center. It's secure and quick even for 10GB+ images.
 image: "harbor/harbor-cover.png"
 date:   2023-07-30 05:50:00 +0530
 categories: [hands-on]
 tags: [DevOps]
 ---
 
-Harbor can be deployed on either Kubernetes or Docker. 
+<div class="header-highlight">
+A private container registry stores your container images within the premises of your data center. It's secure and quick even for 10GB+ images.
+</div>
 
-We are going to use an Ubunut 18.04 VM for this project.
+[Harbor] is an open-source registry for cloud native platforms.
 
-# #1 Install Docker and Docker Compose
+You can set up a fully-fledged private container registry with [Harbor]. 
+
+A container registry is an essential part of your CI/CD pipeline. 
+
+When deploying a Workload, the Kubernetes control plane schedules Pods into nodes in the cluster. Then, each node pulls the required container images from a container registry as specified by the Workload manifest. 
+
+[DockerHub] is a well-known container registry available as a service via the Internet. While a container registry as-a-servie is convenient, there are certain use cases for a private container registry.
+
+## Why use a private container registry
+
+* Security policies in some organizations mandate that container images must be stored within the boundaries of the organization. 
+
+* Pulling large container images (10GB+) from the Internet could be time consuming and inefficient.
+
+* Allowing a production Kubernetes cluster to access a container registry in the Internet is a security threat.
+
+A private container registry inside your data center is the best solution for these problems.
+
+## Networking requirements for a private container registry
+
+You can deploy a private container registry with Harbor in either an on-premise data center or a Virtual Private Cloud (VPC) in public cloud.
+
+To pull the container images, Harbor must be accessible via HTTPS to all nodes in your Kubernetes clusters. You may have to configure routing and firewall rules in your data center to allow access to Harbor from the nodes.
+
+If a particular node cannot access Harbor, the Pods scheduled in that node will fail to start.
+
+# What we are going to build
+
+We are going to install harbor on a host machine running Ubuntu 18.04. Then, we will build the [number-crunch] application on the development workstation, push the images to Harbor, and create a Kubernetes Deployment.
+
+![Harbor registry and K8s cluster](/assets/images/harbor/harbor-setup.png){: width="100%" }
+*Harbor registry and K8s cluster*
+
+Harbor is a containerized application and can be installed either on Docker or Kubernetes. Let' use Docker for this setup.
+
+To keep things simple we will not implement high availbility here. But, you must definitely consider high availability in a production setup.
+
+The steps we have to go through.
+
+1. Prerequisites
+2. Configure SSL certificates
+3. Install Harbor
+4. Push container images to Harbor
+5. Deploy Workload to K8s 
+
+Let's get started.
+
+# #1 Prerequisites
+
+## Networking
+
+Make sure all nodes in your Kubernetes cluster can reach the Harbor host via HTTPS by confugiuring routing and firewall rules.
+
+## Install Docker
+
+Install Docker and Docker Compose on Harbor host.
 
 ```shell
 sudo apt update
@@ -21,18 +78,26 @@ sudo apt install docker
 sudo apt install docker-compose
 ```
 
+Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) on the Developer Workstation for building container images.
 
-# #3 configure SSL certificates
+# #2 Configure SSL certificates
 
-To enable HTTPS access to Harbor, we will use  a self-signed certificate.
+We need an SSL certificate to enable HTTPS access to Harbor.
+
+We can either get a signed certificate from a CA or create a self-sgned certificate. Let's use a self-signed certificate for this setup.
+
+We'll use `registry.cloudqubes.com` as the FQDN of our Harbor host.
+
+You can create these certificates on any Linux host.
 
 Create the private key for the CA certificate.
 ```shell
 openssl genrsa -out ca.key 4096
 ```
 
-Create the CA certificate. Note that this is valid for 10 years.
-If you contnue to use it in production, make sure to renew in 10 years from today.
+Create the CA certificate - valid for 10 years.
+If you contnue to use this in production, make sure to renew in 10 years from today.
+
 ```shell
 openssl req -x509 -new -nodes -sha512 -days 3650 \
  -subj "/C=US/ST=Delaware/L=Lewes/O=CloudQubes/OU=IT/CN=registry.cloudqubes.com" \
@@ -40,7 +105,6 @@ openssl req -x509 -new -nodes -sha512 -days 3650 \
  -out ca.crt
 ```
 
-Next is to create the server certificates
 Create private key.
 ```shell
 openssl genrsa -out registry.cloudqubes.com.key 4096
@@ -70,7 +134,7 @@ DNS.3=registry
 EOF
 ```
 
-Create certificate for Harbor host
+Create certificate for Harbor host.
 ```shell
 openssl x509 -req -sha512 -days 3650 \
     -extfile v3.ext \
@@ -78,6 +142,8 @@ openssl x509 -req -sha512 -days 3650 \
     -in registry.cloudqubes.com.csr \
     -out registry.cloudqubes.com.crt
 ```
+
+## Copy the certificates to Harbor host
 
 Copy the server certificate and key to the certificate folder in Harbor host.
 ```shell
@@ -103,24 +169,45 @@ Restart Docker.
 sudo systemctl restart docker
 ```
 
-# #4 Install Harbor
+## Copy the CA certificate to all Kubernetes nodes
 
-Download the installer.
+Since we are using a self-signed certificate in Harbor we need to _tell_ each node in the Kubernetes cluster to trust it.
+Copy the CA certificate `ca.crt` from the Harbor host to all nodes in the Kubernetes cluster.
 
-Harbor provides two installation methods.
-* Online installer downloads the Harbor container images from DockerHub during the installation. Our Docker cluster nedd to have Internet access for this to work.
+Login to each node and run the following commands.
 
-* Offline installer bundles everything you need so we do not need to connect to Internet while installing.
+```shell
+sudo cp ca.crt /usr/local/share/ca-certificates
+sudo update-ca-certificates
+sudo systemctl restart containerd.service
+```
 
-Download the offline installer to our laptop from the [Harbor releases][harbor-releases] page and copy it to the VM.
+Remember to do the same for any new nodes you add to the cluster. If not, the Pods scheduled on the particular nodes will fail.
+
+# #3 Install Harbor
+
+Harbor has two installation methods.
+* **Online installer** downloads the Harbor container images from [DockerHub] during the installation. The Harbor host must have Internet access for this to work.
+
+* **Offline installer** bundles everything you need so we do not need to connect to the Internet while installing.
+
+Download the offline installer to the development workstation from the [Harbor releases][harbor-releases] page and copy it to the Harbor host.
 
 Extract the installer.
 ```shell
 tar xzvf harbor-offline-installer-v2.8.3.tgz 
 ```
+The installer will be extracted to `harbor` directory in the current path. 
+Go in and create `harbor.yml` by making a copy of `harbor.yml.tmpl`.
 
-Update the `harbor.yml`.
-Switch to the extracted folder. Copy `harbor.yml.tmpl` to `harbor.yml` and update the `certificate` and `private_key` parameters under `https` directive. 
+```shell
+cd harbor
+cp harbor.yml.tmpl harbor.yml
+```
+
+The `harbor.yml` sets the initial parameters for the Harbor installation.
+
+Let's update the `certificate` and `private_key` parameters to set the path to the certificate and key files we created.
 
 ```yaml
 # https related config
@@ -138,55 +225,168 @@ Run the installation script.
 sudo ./install.sh 
 ```
 
-# Verify access to Harbor
+Check the running containers.
+```shell
+sudo docker container ls
+```
 
-Point your browser to `https://registry.cloudqubes.com` and you will get the Harbor portal. You will have to confirm the browsert to trust as this is a self-signed certificate. Get the password of `admin` user from `harbor_admin_password` directive in `harbor.yml` and login to the portal.
+Make sure all containers are up and running.
+```shell
+CONTAINER ID   IMAGE                                COMMAND                  CREATED      STATUS                             PORTS                                                                            NAMES
+1f54cb0ae6d2   goharbor/nginx-photon:v2.8.3         "nginx -g 'daemon of…"   4 days ago   Up 10 seconds (health: starting)   0.0.0.0:80->8080/tcp, :::80->8080/tcp, 0.0.0.0:443->8443/tcp, :::443->8443/tcp   nginx
+fa40611eb108   goharbor/harbor-jobservice:v2.8.3    "/harbor/entrypoint.…"   4 days ago   Restarting (2) 48 seconds ago                                                                                       harbor-jobservice
+f7bd16f4d374   goharbor/harbor-core:v2.8.3          "/harbor/entrypoint.…"   4 days ago   Up 33 seconds (healthy)                                                                                             harbor-core
+bc44f1a8f744   goharbor/harbor-registryctl:v2.8.3   "/home/harbor/start.…"   4 days ago   Up 10 seconds (health: starting)                                                                                    registryctl
+7657237ed9e7   goharbor/harbor-db:v2.8.3            "/docker-entrypoint.…"   4 days ago   Up 10 seconds (health: starting)                                                                                    harbor-db
+f2e8f5b6a88f   goharbor/harbor-portal:v2.8.3        "nginx -g 'daemon of…"   4 days ago   Up 11 minutes (healthy)                                                                                             harbor-portal
+3ce34722713b   goharbor/registry-photon:v2.8.3      "/home/harbor/entryp…"   4 days ago   Up 10 seconds (health: starting)                                                                                    registry
+d0980474a980   goharbor/redis-photon:v2.8.3         "redis-server /etc/r…"   4 days ago   Up 11 minutes (healthy)                                                                                             redis
+303bd115d130   goharbor/harbor-log:v2.8.3           "/bin/sh -c /usr/loc…"   4 days ago   Up 11 minutes (healthy)            127.0.0.1:1514->10514/tcp                                                        harbor-log
+ubuntu@k8s1:~/harbor$ history
+```
 
-Add a new project.
+If you happen to restart Docker Service for some reason, all the containers belonging to Harbor may not start. In such situations go to the installation directoy and use `docker-compose` to start the containers again.
 
-In the portal home clikc on `New Project`.
+```shell
+sudo docker-compose up -d
+```
 
-Enter name `counter-app`, tick the checkbox `Public` and click OK to create the project.
+## Login to Harbor web UI
 
-In the home page clikc on the project page to access the project details.
+Configure the `hosts` file in the development workstation to resolve `registry.cloudqubes.com` to the IP address of the Harbor host and go to `https://registry.cloudqubes.com` to log in to the Harbor UI.
 
-There are no repositories yet, as we have not published any container image to this repository.
+Harbor creates an `admin` account at the installation with the password set in the `harbor_admin_password` directive in `harbor.yml`. Login to Harbor UI with this password.
 
-In the Harbor portal click on the project `number-crunch` we just created.
-Clikc on the `PUSH COMMAND` link in the right side to get the Docker and Helm commands for this repository.
+# #4 Create a project
 
+In the Harbor web UI home page, click on `New Project`.
 
-# Building Number-crunch app
+Enter name `number-crunch`, tick the checkbox `Public` and click `OK` to create the project.
 
-Clone the repository number-crunch and build container images.
+![Harbor Web UI - Project list](/assets/images/harbor/harbor-webui-projects.png){: width="100%" }
+*Harbor Web UI - Project list*
+
+Click on the project name `number-crunch` to access the project details.
+
+![number-crunch repositories](/assets/images/harbor/harbor-web-ui-counter-app-repos.png){: width="100%" }
+*number-crunch repositories*
+
+There are no repositories, as we have not yet published any container image to this project.
+
+# #5 Push images to Harbor
+
+In the developer workstation, clone the repository [number-crunch] and build container images.
 ```shell
 git clone git@github.com:cloudqubes/number-crunch.git
 docker build -t registry.cloudqubes.com/number-crunch/number-crunch-app:1.0.0 .
 ```
 
-Login to the Harbor registry
-```shell
-docker login -u admin registry.cloudqubes.com
-```
-Provide the password when prompted. If you haven't chaged the it would be the default admin password.
+Our image name is starting with `registry.cloudqubes.com`. This is the FQDN of the Harbor host. This name is required for Kubernetes to locate the container registry.
 
-Push image to Harbor
+Login to Harbor container registry from Docker CLI in the developer workstation.
+```shell
+sudo docker login -u admin registry.cloudqubes.com
+```
+When prompted, type in the password of the Harbor `admin` user. Since we have not changed it, the password is the same as we used to login to the Harbor UI.
+
+Push image to Harbor.
 ```shell
 sudo docker push registry.cloudqubes.com/number-crunch/number-crunch-app:1.0.0
 ```
 
-# Pulling images from Harbor to Kubernetes
+# #6 Deploy workload to Kubernetes
 
-Create Kubernetes secret.
+## Configure the hosts file in nodes
+
+
+
+Create a Kubetnetes secret to store Harboe login information.
+
 ```shell
-kubectl create secret docker-registry harbor-registry-secret --docker-server="https://harbor.example.com" --docker-username="admin" --docker-password="Harbor12345"
+kubectl create secret docker-registry harbor-registry-secret --docker-server="https://registry.cloudqubes.com" --docker-username="admin" --docker-password="Harbor12345"
 ```
 
-Create the Deploment manifest.
+Create the manifest `number-crunch.yml`.
+
 ```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: number-crunch-app
+spec:
+  selector:
+    matchLabels:
+      app: number-crunch
+  replicas: 2 
+  template:
+    metadata:
+      labels:
+        app: number-crunch
+    spec:
+      containers:
+      - name: number-crunch
+        image: registry.cloudqubes.com/number-crunch/number-crunch-app:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: harbor-registry
 
 ```
 
-[harbor-releases]: https://github.com/goharbor/harbor/releases
+Use `kubectl` to create the Deployment.
+```shell
+kubectl apply -f number-crunch.yml
+```
 
+During the deployment, the nodes use `registry.cloudqubes.com` to locate the container registry.
+
+The node must be able to resolve this FQDN to the IP address of the harbor host. So, configure the FQDN `registry.cloudqubes.com` in the local DNS server in your data center.
+
+If you do not have a local DNS server, you can configure the `hosts` file in each node to map the IP address.
+
+After creating the Deployment, check whether all Pods are running.
+```shell
+kubectl get pods
+```
+
+```shell
+NAME                                READY   STATUS    RESTARTS       AGE
+number-crunch-app-5dc7b48bb-4pw7r   1/1     Running   0              118m
+number-crunch-app-5dc7b48bb-85xql   1/1     Running   0              118m
+```
+
+If any node cannot pull images from Harbor, the Pod scheduled on that node will fail to start. You can use `kubectl describe pod` to check the reason for failure.
+```shell
+kubectl describe pod <pod-name>
+```
+
+If a Pod fails to start in a particular node, the most likely problem could be one of these.
+
+* No IP network connectivity from the node to Harbor host.
+
+* A firewall is blocking HTTPS port from the node to Harbor host.
+
+* SSL certificates are not properly configured either on Harbor host or the node.
+
+Troublishooting along these three points will lead you to a solution.
+
+## Wrapping up
+
+If you have [a good reason](#why-use-a-private-container-registry) for a private container registry, [Harbor] is for you. 
+
+It's a [CNCF graduated](https://www.cncf.io/projects/harbor/), open-source project. It's easy to get started and includes all the features for a [secure private registry](https://goharbor.io/docs/2.8.0/administration/).
+
+So, give it a try in your VPC or data center. 
+
+Let me know if anything goes wrong. 
+
+Post your problem in the comments here or reach me via Twitter [@cloudqubes] and I would be glad to help.
+
+[DockerHub]: https://hub.docker.com/
+[harbor-releases]: https://github.com/goharbor/harbor/releases
+[gcp-vpc]: https://cloud.google.com/vpc
+[number-crunch]: https://github.com/cloudqubes/number-crunch
+[Harbor]: https://goharbor.io/
+[@cloudqubes]: https://twitter.com/cloudqubes
 
