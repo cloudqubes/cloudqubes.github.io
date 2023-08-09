@@ -4,6 +4,7 @@ title:  "A friendly introduction to Kubernetes"
 subtitle: >
   This article will help you grasp the basic concepts of Kubernetes and will also make you familiar with the jargon.
 date:   2022-11-26 07:00:00 +0530
+image: kubernetes-beginner-cover.png
 categories: [devops, insights]
 tags: [Kubernetes]
 ---

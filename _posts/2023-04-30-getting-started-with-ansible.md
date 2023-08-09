@@ -2,6 +2,7 @@
 layout: post
 title:  "Getting Started with Ansible"
 date:   2023-04-30 06:30:00 +0530
+image: "ansible-cover.png"
 categories: [hands-on, ansible]
 tags: [Linux]
 ---

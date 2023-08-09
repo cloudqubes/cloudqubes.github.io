@@ -4,6 +4,7 @@ title:  "How to use Ansible for verifying configurations"
 subtitle: > 
   You are already using Ansible for configuring Linux servers. Here's how to use Ansible for verifing configurations.
 date:   2023-06-11 05:50:00 +0530
+image: "ansible-verify-cover.png"
 categories: [recipe]
 tags: [Linux]
 ---

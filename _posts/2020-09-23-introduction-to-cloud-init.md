@@ -3,6 +3,7 @@ layout: post
 title:  "Introduction to cloud-init"
 date:   2020-09-23 04:20:00 +0530
 categories: [handson, OpenStack]
+image: cloud-init-cover.png
 tags: [OpenStack]
 ---
 

@@ -3,6 +3,7 @@ layout: post
 title:  "Introduction to the concept of SR-IOV"
 date:   2020-10-20 05:10:00 +0530
 categories: [handson, OpenStack]
+image: sr-iov-cover.png
 tags: [OpenStack]
 ---
 

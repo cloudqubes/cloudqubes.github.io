@@ -4,6 +4,7 @@ title:  "How to manage multiple GitHub accounts in a single workstation"
 subtitle: > 
   Using SSH key-based authentication and SSH config file, you can easily push code from multiple GitHub accounts in the same computer.
 date:   2023-05-26 06:00:00 +0530
+image: multiple-github-cover.png
 categories: [recipe]
 tags: [Linux]
 ---

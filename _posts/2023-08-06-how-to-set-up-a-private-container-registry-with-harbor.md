@@ -375,7 +375,7 @@ If any Pod fails to start, one of these are likely to be the reason.
 
 Troubleshooting along these points will lead you to a solution.
 
-Harbor can show you the number of pulls for each image. This is also usefule to ascertain whether Kubernetes is able to successfully pull images from the registry.
+Harbor shows you the number of pulls for each image. This is also useful to ascertain whether Kubernetes can successfully pull images from this registry.
 
 ![Number of pulls for a repository in Harbor project](/assets/images/harbor/harbor-image-pulls.png){: width="100%" }
 *Number of Pulls*
@@ -388,9 +388,9 @@ It's a [CNCF graduated](https://www.cncf.io/projects/harbor/), open-source proje
 
 So, give it a try in your VPC or data center. 
 
-Let me know if anything goes wrong. 
+And let me know if something goes wrong while you are setting up Harbor.
 
-Post your problem in comments here or reach me via Twitter [@cloudqubes] for any help you need.
+Post your problem in comments here or reach me via Twitter [@cloudqubes] for any help.
 
 [DockerHub]: https://hub.docker.com/
 [harbor-releases]: https://github.com/goharbor/harbor/releases

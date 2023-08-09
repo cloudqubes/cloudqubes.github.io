@@ -4,6 +4,7 @@ title:  "Running containerized applications in Kubernetes"
 subtitle: > 
   This article explains the basics of running containerized applications in Kubernetes.
 date:   2022-12-06 17:00:00 +0530
+image: kubernetes-applications-cover.png
 categories: [devops, insights]
 tags: [Kubernetes]
 ---

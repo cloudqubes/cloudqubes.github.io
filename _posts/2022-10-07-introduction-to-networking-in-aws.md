@@ -2,7 +2,8 @@
 layout: post
 title:  "Introduction to Networking in AWS"
 date:   2022-10-07 06:00:00 +0530
-categories: [insights, cloud]
+categories: [insights]
+image: aws-networking-cover.png
 tags: ["Cloud", "AWS"]
 ---
 

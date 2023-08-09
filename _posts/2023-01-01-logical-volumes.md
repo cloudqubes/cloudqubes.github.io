@@ -4,6 +4,7 @@ title:  "How to extend the root disk space in Ubuntu"
 subtitle: > 
   While installing Ubuntu Server if you let the installer take care of the disk partitioning, the root volume will not occupy the entire disk by default. But, Ubuntu uses LVM so you can easily extend the volumes, if you run out of space.
 date:   2022-12-28 11:00:00 +0530
+image: ubuntu-disk-cover.png
 categories: [recipe]
 tags: [Linux]
 ---

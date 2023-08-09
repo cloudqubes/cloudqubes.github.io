@@ -4,6 +4,7 @@ title:  "SQL vs NoSQL: How to choose the best database"
 subtitle: >
   Thinking on using a NoSQL database for your next app. Do not conclude until you have read this article.
 date:   2022-11-03 07:00:00 +0530
+image: sql-vs-nosql-cover.png
 categories: [devops, insights]
 tags: [DevOps]
 ---
